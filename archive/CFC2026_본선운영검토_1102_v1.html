@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CFC 2026 본선 운영 검토</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+</head>
+<body>
+<style>
+/* Layout: 단일 컬럼 업무 문서. 상단 요약 → 시트별 수정안 → 시간표 비교 → 발주 일정 → 기물 체크리스트(필터·체크 저장) */
+:root{
+  --bg:#f6f5f2; --surface:#ffffff; --fg:#22201d; --muted:#6b665f; --line:#dedad3;
+  --accent:#1f5c55; --accent-soft:#e3efec;
+  --p1:#b3261e; --p1-soft:#fbe9e7; --p2:#a15c00; --p2-soft:#fdf1df; --p3:#5a6270; --p3-soft:#eceef1;
+  --ok:#2e7d4f;
+  --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#181715; --surface:#22201d; --fg:#ecE8e1; --muted:#a39d94; --line:#3a3732;
+  --accent:#6fbfb3; --accent-soft:#1f3532;
+  --p1:#f28b82; --p1-soft:#3b1f1d; --p2:#f0b35a; --p2-soft:#3a2a14; --p3:#aab2bf; --p3-soft:#2a2d33; --ok:#7fcf9c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#181715; --surface:#22201d; --fg:#ece8e1; --muted:#a39d94; --line:#3a3732;
+  --accent:#6fbfb3; --accent-soft:#1f3532;
+  --p1:#f28b82; --p1-soft:#3b1f1d; --p2:#f0b35a; --p2-soft:#3a2a14; --p3:#aab2bf; --p3-soft:#2a2d33; --ok:#7fcf9c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.65}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:48px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h1{font-size:1.9rem;font-weight:700}
+h2{font-size:1.3rem;font-weight:700;display:flex;gap:10px;align-items:baseline}
+h2 .n{font-family:var(--mono);font-size:.85rem;color:var(--accent);font-weight:500}
+h3{font-size:1.02rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+header{display:grid;gap:12px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:.9rem}
+.meta b{color:var(--fg);font-weight:500}
+section{display:grid;gap:16px;min-width:0}
+.lead{color:var(--muted);max-width:68ch}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.P1{background:var(--p1-soft);color:var(--p1)} .P2{background:var(--p2-soft);color:var(--p2)} .P3{background:var(--p3-soft);color:var(--p3)}
+.top5{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.issue{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--p1);border-radius:6px;padding:14px 16px;display:grid;gap:6px;min-width:0}
+.issue p{font-size:.92rem}
+.issue .fix{color:var(--accent);font-weight:500}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font-size:.75rem;letter-spacing:.04em;color:var(--muted);font-weight:500;background:var(--bg);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.loc{font-family:var(--mono);font-size:.8rem;white-space:nowrap;color:var(--muted)}
+td .new{color:var(--accent);font-weight:500}
+.cols{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:10px;min-width:0}
+.diff td.ch{color:var(--accent);font-weight:500}
+.timeline{display:grid;gap:0;border-left:2px solid var(--line);margin-left:6px}
+.tl{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:10px 0 10px 18px;position:relative}
+.tl::before{content:"";position:absolute;left:-7px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.tl.hot::before{background:var(--p1);border-color:var(--p1)}
+.tl .d{font-family:var(--mono);font-size:.85rem;font-weight:500}
+.tl ul{margin:0;padding-left:18px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar button{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:5px 12px;border-radius:99px;cursor:pointer}
+.toolbar button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.toolbar button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.progress{margin-left:auto;font-size:.85rem;color:var(--muted)}
+.group{display:grid;gap:8px}
+.group h3{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.group h3 small{font-weight:400;color:var(--muted);font-size:.82rem}
+td.chk{width:34px}
+td.chk input{width:17px;height:17px;accent-color:var(--accent)}
+tr.done td:not(.chk){color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.tag{font-size:.72rem;color:var(--accent);background:var(--accent-soft);padding:1px 7px;border-radius:4px;white-space:nowrap}
+.add{font-size:.72rem;color:var(--p2);font-weight:700}
+ol.q{margin:0;padding-left:20px;display:grid;gap:6px}
+footer{color:var(--muted);font-size:.82rem}
+@media (max-width:520px){.tl{grid-template-columns:1fr;gap:2px}h1{font-size:1.5rem}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Coffee Futures Challenge 2026 · 본선</span>
+  <h1>본선 운영계획 초안 검토 및 기물·발주 체크</h1>
+  <div class="meta">
+    <span>행사 <b>11.13(금) 코엑스 300호</b></span>
+    <span>본행사 <b class="mono">13:00–17:20</b></span>
+    <span>본선 <b>8팀 · 심사 2명</b></span>
+    <span>상금 <b>총 210만 원</b> (대상 100 · 우수 50 · 장려 30×2)</span>
+    <span>검토일 <b class="mono">11.02 (D-11)</b></span>
+  </div>
+  <p class="lead">원본 엑셀 4개 시트(당일 큐시트·담당 배치·준비 체크리스트·참가팀 관리)를 기준으로 봤습니다. 큐시트 구성은 꼼꼼하지만, 팀 사이 전환시간이 없고 총괄 한 명에게 송출·집계·상장이 몰려 있어 지연이 생기면 회복할 방법이 없습니다. 외부 제작물 기한도 전부 전날(11.12)로 잡혀 있어 일정 분리가 필요합니다.</p>
+</header>
+
+<section>
+  <h2><span class="n">1</span>먼저 고칠 것 7가지</h2>
+  <div class="top5">
+    <div class="issue"><span class="pill P1">P1 · 시간표</span><h3>팀 간 전환시간 0분</h3><p>20분 슬롯이 발표 15 + Q&A 5로 꽉 차 있습니다. 파일 전환·마이크 인계·발표자 이동, 심사위원 평가표 기입이 모두 Q&A 마지막 1분에 겹칩니다. 한 팀이 1–2분만 넘어도 8팀 내내 밀립니다.</p><p class="fix">→ 팀당 2분 전환을 넣은 22분 슬롯. 휴식을 30분→17분으로 줄이면 종료 17:20 유지 (3번 항목 참조)</p></div>
+    <div class="issue"><span class="pill P1">P1 · 인력</span><h3>백종아 단일 장애점</h3><p>총괄 승인·예외 판단 + 매 팀 파일 송출 + 점수 입력 + 상장 출력 + 사회자 결과지 전달이 모두 한 사람입니다. 16:20–16:50 집계 구간과 발표 중 돌발 상황이 겹치면 처리할 사람이 없습니다.</p><p class="fix">→ 발표 송출을 공용 AV(또는 사회자 옆 운영 1명)에 넘기고 총괄은 판단·집계에 집중</p></div>
+    <div class="issue"><span class="pill P1">P1 · 인력</span><h3>사회자·시상자·운영요원 실명 미정</h3><p>D-11인데 사회자 미정, 운영요원 A·B 미정, 시상자는 큐시트에만 등장하고 담당 배치표엔 없습니다. 대본·브리핑·명찰이 모두 여기 묶여 있습니다.</p><p class="fix">→ 11.03(화)까지 확정. 시상자(누가 상장·보드를 전달하는지)를 담당 배치에 행 추가</p></div>
+    <div class="issue"><span class="pill P1">P1 · 배치</span><h3>운영요원 B 위치 충돌</h3><p>B가 "개회 후 입구 QR 상주"이면서 매 팀 Q&A 때 심사석 마이크 전달, 휴식 중 평가표 회수를 맡습니다. 동시에 두 곳에 있어야 합니다.</p><p class="fix">→ 심사석에 마이크 1개 거치(고정) + 입구는 포럼 공용 등록 인력에 요청</p></div>
+    <div class="issue"><span class="pill P1">P1 · 발주</span><h3>외부 제작물 기한이 전날</h3><p>시상보드·상장 케이스·명패·배너까지 모두 11.12 기한입니다. 출력소 제작은 보통 2–4 영업일이 걸려 11.12에 문제가 생기면 대안이 없습니다.</p><p class="fix">→ 외부 제작은 11.05(목) 발주 · 11.10(화) 수령, 내부 출력은 11.11(수)</p></div>
+    <div class="issue"><span class="pill P1">P1 · 정산</span><h3>상금 지급 서류 미확정</h3><p>"지급 서류·일정은 회계 확인 후 기재"로 남아 있는데, 큐시트상 당일 17:20에 수상팀 서류를 회수합니다. 팀 상금 수령자(대표자/분배), 원천징수 여부, 필요 서류가 정해져야 양식을 인쇄할 수 있습니다.</p><p class="fix">→ 11.06(금)까지 회계 확인 후 양식 확정. 심사위원 사례비 서류도 함께</p></div>
+    <div class="issue"><span class="pill P1">P1 · 문서</span><h3>시상보드 수량 모순</h3><p>준비 체크리스트 B15는 수량 "4개"인데 설명은 "대상·우수·장려 각 2개"(=6개)로 적혀 있습니다. 큐시트 70·71행은 둘 다 "장려상 1팀"이라 순서 구분이 안 됩니다.</p><p class="fix">→ 대상 1 · 우수 1 · 장려 2 = 4개로 정정, 큐시트는 "장려상 ①/②"</p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">2</span>시트별 수정 제안</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>우선</th><th>위치</th><th>현재</th><th>문제</th><th>수정안</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill P1">P1</span></td><td class="loc">큐시트 19–62행</td><td>팀당 20분, 전환 0분</td><td>지연 누적, 평가표 기입 시간 없음</td><td class="new">22분 슬롯(전환 2분 포함). 전환 2분 동안 심사위원 기입, 다음 팀 착석, 파일 전환</td></tr>
+      <tr><td><span class="pill P1">P1</span></td><td class="loc">큐시트 G·I열 전반</td><td>송출 = 백종아</td><td>총괄이 매 팀 노트북 앞에 묶임</td><td class="new">"영상·음향 조작" 담당을 공용 AV로 요청. 불가 시 8팀 파일을 01_팀명 순으로 한 폴더에 정리해 클릭 한 번 전환</td></tr>
+      <tr><td><span class="pill P1">P1</span></td><td class="loc">담당 배치 11행</td><td>B 입구 QR 상주</td><td>장내 업무(Q&A 마이크·회수)와 충돌</td><td class="new">입구 = 공용 등록 인력, B = 장내 전담. 심사석 마이크 고정 거치</td></tr>
+      <tr><td><span class="pill P1">P1</span></td><td class="loc">담당 배치 (신규 행)</td><td>시상자 없음</td><td>68행 "시상자 대기"의 주체 불명</td><td class="new">"시상자" 행 추가 (예: 심사위원 2명 또는 주최측 대표). 등급별 시상자 지정</td></tr>
+      <tr><td><span class="pill P1">P1</span></td><td class="loc">체크리스트 F열</td><td>인쇄·비품 전부 11.12</td><td>외부 제작 리드타임 미반영</td><td class="new">"발주일 / 수령일" 열 분리. 아래 4번 일정표 기준</td></tr>
+      <tr><td><span class="pill P1">P1</span></td><td class="loc">체크리스트 B15</td><td>4개 / 각 2개</td><td>수량 모순</td><td class="new">대상 1 · 우수 1 · 장려 2 (총 4)</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">체크리스트 B10</td><td>동점 규정 "확정 필요"</td><td>심사 2명이라 동점 가능성이 큼</td><td class="new">예: ① 총점 → ② 20점 항목 2개 합 → ③ 심사위원 협의. 심사 기준 안내문에 명시</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">큐시트 67–73행</td><td>결과 확정 후 상장 출력·수상 화면 작성</td><td>16:43–16:50에 출력·화면 입력·결과지 작성이 몰림</td><td class="new">8팀분 상장 이름 파일과 수상 화면을 미리 만들어 두고 당일엔 선택만. 출력은 총평과 병행</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">큐시트 전체</td><td>식사 시간 없음</td><td>운영진 10:00–18:00 무식</td><td class="new">11:30–12:30 사이 교대 식사(도시락 4개), 심사위원 다과</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">큐시트 13행</td><td>심사위원 도착 "사전 협의"</td><td>12:40 브리핑 전 도착 시간 미정</td><td class="new">12:30 도착으로 확정 통보, 안내 메일에 300호 동선 포함</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">체크리스트 (누락)</td><td>운영 화면 PPT 없음</td><td>큐시트에 타이틀·소개·휴식·시상 화면이 10번 넘게 나오는데 제작 항목이 없음</td><td class="new">"운영 화면 PPT" 항목 추가 (기물표 F 그룹)</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">체크리스트 (누락)</td><td>심사 관련 서류</td><td>공정성·이해충돌 확인, 사례비 지급 서류 없음</td><td class="new">심사위원 서약서·사례비 지급 서류 각 2부+예비</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">체크리스트 (누락)</td><td>촬영 고지</td><td>발표·시상 사진을 홍보에 쓸 경우 고지·동의 필요</td><td class="new">입구 촬영 안내문 + 참가팀 안내 메일에 촬영 사용 고지</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">체크리스트 B9</td><td>PPT 취합 11.06</td><td>당일 "임의 교체 제한"의 기준 시점이 없음</td><td class="new">최종 파일 잠금 11.10(화) 18:00 명시, 이후 교체는 총괄 승인</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">체크리스트 B32·B46</td><td>"참가자 P"</td><td>참가 인원 미정이라 배지·생수·좌석 계산 불가</td><td class="new">참가팀 관리 E열(참석 인원) 합계를 P로 연결</td></tr>
+      <tr><td><span class="pill P2">P2</span></td><td class="loc">체크리스트 B8·B13</td><td>팀당/개인별 발급 미정</td><td>상장 용지·케이스 수량이 2–4배 달라짐</td><td class="new">11.04 결정. 직인도 인쇄 직인/실날인 중 결정</td></tr>
+      <tr><td><span class="pill P3">P3</span></td><td class="loc">큐시트 L62</td><td>"다음 팀은 대기 위치에서 즉시 이동"</td><td>8번 팀 뒤엔 다음 팀이 없음</td><td class="new">"평가표 최종 회수로 전환"</td></tr>
+      <tr><td><span class="pill P3">P3</span></td><td class="loc">큐시트 L58</td><td>"전 팀 발표 종료"</td><td>8번 팀 발표 시작 행에 종료 문구</td><td class="new">"마지막 팀"</td></tr>
+      <tr><td><span class="pill P3">P3</span></td><td class="loc">참가팀 관리 F–H</td><td>시간 직접 입력</td><td>큐시트 시간 바꾸면 두 시트가 어긋남</td><td class="new">참가팀 관리 시간을 큐시트 셀 참조 수식으로</td></tr>
+      <tr><td><span class="pill P3">P3</span></td><td class="loc">참가팀 관리 A17</td><td>ChatGPT 라이브러리 링크</td><td>외부 공유본에 내부 작업 링크 노출</td><td class="new">배포본에서 삭제</td></tr>
+      <tr><td><span class="pill P3">P3</span></td><td class="loc">체크리스트 C33–48</td><td>"수량은 품목란 참조" 반복</td><td>수량 열이 비어 있는 것과 같음</td><td class="new">품목·수량 열 분리 (아래 기물표 형식)</td></tr>
+      <tr><td><span class="pill P3">P3</span></td><td class="loc">큐시트 (출력용)</td><td>72행 상세 큐</td><td>사회자·심사위원에게는 과함</td><td class="new">사회자용 1쪽 요약 큐시트 별도 출력</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">3</span>시간표 수정안</h2>
+  <p class="lead">발표 15분 + Q&A 5분은 그대로 두고, 팀 사이 2분 전환을 넣었습니다. 휴식을 17분으로 줄이고 상장 출력을 총평과 병행하면 종료 17:20이 유지됩니다.</p>
+  <div class="tbl"><table class="diff">
+    <thead><tr><th>구간</th><th>현재</th><th>수정안</th><th>바뀌는 점</th></tr></thead>
+    <tbody class="mono">
+      <tr><td>개회·소개·규칙</td><td>13:00–13:10</td><td>13:00–13:10</td><td>—</td></tr>
+      <tr><td>1번 팀</td><td>13:10–13:30</td><td class="ch">13:10–13:32</td><td>전환 2분</td></tr>
+      <tr><td>2번 팀</td><td>13:30–13:50</td><td class="ch">13:32–13:54</td><td>전환 2분</td></tr>
+      <tr><td>3번 팀</td><td>13:50–14:10</td><td class="ch">13:54–14:16</td><td>전환 2분</td></tr>
+      <tr><td>4번 팀</td><td>14:10–14:30</td><td class="ch">14:16–14:38</td><td>전환 2분</td></tr>
+      <tr><td>휴식·1–4번 입력/검수</td><td>14:30–15:00 (30분)</td><td class="ch">14:38–14:55 (17분)</td><td>입력 10 · 검수 5 · 재입장 2</td></tr>
+      <tr><td>5번 팀</td><td>15:00–15:20</td><td class="ch">14:55–15:17</td><td></td></tr>
+      <tr><td>6번 팀</td><td>15:20–15:40</td><td class="ch">15:17–15:39</td><td></td></tr>
+      <tr><td>7번 팀</td><td>15:40–16:00</td><td class="ch">15:39–16:01</td><td></td></tr>
+      <tr><td>8번 팀</td><td>16:00–16:20</td><td class="ch">16:01–16:21</td><td>마지막 팀은 전환 불필요</td></tr>
+      <tr><td>회수·5–8번 입력·검수</td><td>16:20–16:38</td><td class="ch">16:21–16:38</td><td>회수 3 · 입력 8 · 검수 6</td></tr>
+      <tr><td>수상 결과 확정·결과지</td><td>16:38–16:43</td><td class="ch">16:38–16:45</td><td>사회자 결과지까지 여기서</td></tr>
+      <tr><td>심사 총평</td><td>16:50–16:55</td><td class="ch">16:45–16:50</td><td>총평 중 상장 출력 병행 (장려상부터)</td></tr>
+      <tr><td>시상 (장려①·②·우수·대상)</td><td>16:55–17:15</td><td class="ch">16:50–17:10</td><td>4·4·6·6분 유지</td></tr>
+      <tr><td>단체 촬영</td><td>17:15–17:18</td><td class="ch">17:10–17:15</td><td>+2분</td></tr>
+      <tr><td>폐회·후속 안내</td><td>17:18–17:20</td><td class="ch">17:15–17:20</td><td>+3분</td></tr>
+    </tbody>
+  </table></div>
+  <p class="lead">전환 2분이 어렵다면 대안은 Q&A를 4분으로 줄이고 1분 전환을 두는 것입니다. 어느 쪽이든 참가팀 안내문(발표 규칙)과 사회자 대본에 같은 시간이 들어가야 합니다.</p>
+</section>
+
+<section>
+  <h2><span class="n">4</span>발주·확정 일정 (D-11 → D-day)</h2>
+  <div class="timeline">
+    <div class="tl hot"><span class="d">11.03 화</span><ul><li>사회자·운영요원 A/B·시상자 확정 (실명·연락처)</li><li>코엑스/포럼 사무국 확인: 10:00 입실, 18:00 철수, 공용 AV 상주, 마이크 수량·종류, 촬영 인력, 입구 등록 지원, Wi-Fi</li></ul></div>
+    <div class="tl hot"><span class="d">11.04 수</span><ul><li>상장 문안·발급 주체·직인 방식, 팀당/개인별 발급 결정</li><li>시상보드·배너·명패 디자인 확정</li><li>참가팀별 참석 인원 회신 요청 (P 확정용)</li></ul></div>
+    <div class="tl hot"><span class="d">11.05 목</span><ul><li><b>외부 제작 발주</b>: 시상보드 4, 상장 사전 인쇄분(선택), 명패, X배너/포토월</li><li>구매 주문: 상장 케이스, 상장 용지, 문구류, 건전지, 타이머, USB</li></ul></div>
+    <div class="tl"><span class="d">11.06 금</span><ul><li>8팀 PPTX·PDF 1차 취합</li><li>회계 확인 → 상금 수령 서류·심사 사례비 서류 양식 확정</li></ul></div>
+    <div class="tl"><span class="d">11.09 월</span><ul><li>집계 산식·동점 규정 확정 → 평가표·심사 기준 안내 최종본</li><li>운영 화면 PPT 초안, 사회자 대본 초안 → 사회자 전달</li></ul></div>
+    <div class="tl"><span class="d">11.10 화</span><ul><li>발표 파일 최종 잠금 18:00, 발표자료집 편집</li><li>외부 제작물 수령·검수</li><li>안내 발송 (사회자·심사위원·참가팀), 도시락·생수 주문</li></ul></div>
+    <div class="tl"><span class="d">11.11 수</span><ul><li>내부 출력 일괄 (평가표·큐시트·대본·명단·표지·양식), 자료집 인쇄</li><li>상장 8팀분 이름 파일 미리 만들기</li></ul></div>
+    <div class="tl"><span class="d">11.12 목</span><ul><li>리허설: 노트북·리모컨·프린터 상장 급지·QR 단말</li><li>박스 패킹 (아래 체크리스트로 최종 대조), 꽃다발 수령(선택)</li></ul></div>
+    <div class="tl hot"><span class="d">11.13 금</span><ul><li>10:00 입실 · 13:00 개회 · 17:20 종료 · 18:00 철수</li></ul></div>
+  </div>
+</section>
+
+<section id="checklist">
+  <h2><span class="n">5</span>필요 기물·발주 체크리스트</h2>
+  <p class="lead">원본 체크리스트에 빠진 항목을 더해 발주 방식별로 다시 묶었습니다. <span class="add">추가</span> 표시는 원본에 없던 항목입니다. 체크 상태는 이 브라우저에만 저장됩니다.</p>
+  <div class="toolbar" role="group" aria-label="구분 필터">
+    <button type="button" data-f="all" aria-pressed="true">전체</button>
+    <button type="button" data-f="A" aria-pressed="false">외부 제작</button>
+    <button type="button" data-f="B" aria-pressed="false">구매</button>
+    <button type="button" data-f="C" aria-pressed="false">대관처 확인</button>
+    <button type="button" data-f="D" aria-pressed="false">보유·대여</button>
+    <button type="button" data-f="E" aria-pressed="false">내부 출력</button>
+    <button type="button" data-f="F" aria-pressed="false">디지털 제작</button>
+    <span class="progress" id="progress"></span>
+  </div>
+
+  <div class="group" data-g="A">
+    <h3>A. 외부 제작 발주 <small>리드타임 있음 · 11.05 발주 → 11.10 수령</small></h3>
+    <div class="tbl"><table><thead><tr><th></th><th>품목</th><th>수량</th><th>사양·확인</th><th>기한</th></tr></thead><tbody>
+      <tr><td class="chk"><input type="checkbox" id="a1"></td><td>시상보드(상금 보드)</td><td class="mono">4</td><td>대상 100만 1 · 우수 50만 1 · 장려 30만 2. 팀명 없이 제작, 폼보드 규격 통일</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="a2"></td><td>상장 사전 인쇄 <span class="add">추가</span></td><td class="mono">등급별 수상 수 + 예비 2</td><td>테두리·문구·직인을 인쇄소에서 미리 찍고 이름만 현장 출력. 현장 프린터 고급지 급지 실패 대비</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="a3"></td><td>심사위원 명패 + 거치대</td><td class="mono">2</td><td>박재현 대표 / 조원진 칼럼니스트. 소속·직함 표기 본인 확인</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="a4"></td><td>X배너 또는 무대 배경 <span class="add">추가</span></td><td class="mono">1–2</td><td>행사명·로고. 단체 촬영 배경 겸용. 포럼 공용 배경이 있으면 생략</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="a5"></td><td>출입증·목걸이</td><td class="mono">P + 2 + 운영 4 + 예비 5</td><td>포럼 배지로 대체 가능한지 먼저 확인 (중복 제작 방지)</td><td class="mono">11.04 확인</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="a6"></td><td>꽃다발·트로피 (선택)</td><td class="mono">4</td><td>제공 확정 시에만. 꽃다발은 11.12 수령</td><td class="mono">11.06 결정</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="group" data-g="B">
+    <h3>B. 구매 <small>11.05 주문 → 11.10 도착</small></h3>
+    <div class="tbl"><table><thead><tr><th></th><th>품목</th><th>수량</th><th>사양·확인</th><th>기한</th></tr></thead><tbody>
+      <tr><td class="chk"><input type="checkbox" id="b1"></td><td>상장 케이스</td><td class="mono">4 + 예비 2</td><td>상장 규격(A4/B5)과 일치. 개인별 발급이면 수량 재산정</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b2"></td><td>상장 용지</td><td class="mono">10</td><td>최종 4 + 테스트·오출력 6. 프린터 급지 가능한 평량 확인</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b3"></td><td>A4 용지</td><td class="mono">1권(500매)</td><td>현장 예비. 자료집 인쇄량은 별도</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b4"></td><td>검정펜</td><td class="mono">10</td><td>심사위원용 2 별도 지급</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b5"></td><td>클립보드</td><td class="mono">5</td><td>심사 2 · 운영 3</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b6"></td><td>L자 파일 · 서류봉투</td><td class="mono">각 5–10</td><td>평가표 원본·결과서 분리 보관, 봉투에 라벨</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b7"></td><td>가위 · 테이프 · 가퍼테이프 · 포스트잇 · 라벨</td><td class="mono">각 1</td><td>케이블·표지 고정, 상장 순서 표시</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b8"></td><td>건전지 AA/AAA <span class="add">추가</span></td><td class="mono">각 8</td><td>무선마이크·리모컨 교체용</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b9"></td><td>USB 메모리</td><td class="mono">2</td><td>8팀 PPTX·PDF, 영상, 운영 화면, 대본, 상장 양식</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b10"></td><td>발표 타이머</td><td class="mono">1</td><td>발표자가 보이는 대형 카운트다운(또는 태블릿 앱 + 거치대)</td><td class="mono">11.05</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b11"></td><td>생수</td><td class="mono">(P + 2 + 운영 5) × 1.2</td><td>심사위원은 2병씩. 컵·티슈 포함</td><td class="mono">11.10</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b12"></td><td>운영진 도시락 · 심사위원 다과 <span class="add">추가</span></td><td class="mono">도시락 4–5 · 다과 1식</td><td>총괄·A·B·사회자(+AV). 11:30–12:30 교대 식사</td><td class="mono">11.10</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="b13"></td><td>인주 <span class="add">추가</span></td><td class="mono">1</td><td>직인 실날인 방식일 때만</td><td class="mono">11.05</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="group" data-g="C">
+    <h3>C. 대관처·포럼 사무국 확인·신청 <small>11.03까지 회신 받기</small></h3>
+    <div class="tbl"><table><thead><tr><th></th><th>항목</th><th>필요량</th><th>확인할 것</th><th>기한</th></tr></thead><tbody>
+      <tr><td class="chk"><input type="checkbox" id="c1"></td><td>입실·철수 시간</td><td class="mono">10:00 / 18:00</td><td>이전 행사 유무, 원상복구 기준</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c2"></td><td>스크린·프로젝터</td><td class="mono">1식</td><td>화면 비율(16:9), HDMI 입력 위치, 케이블 길이</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c3"></td><td>무선 마이크</td><td class="mono">3 + 예비 1</td><td>사회자 1 · 발표자 1 · 심사석 1(거치). 핸드/핀 종류</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c4"></td><td>노트북 소리 → 장내 스피커 <span class="add">추가</span></td><td class="mono">1</td><td>발표 영상 음성 출력 경로(HDMI 오디오 또는 3.5mm)</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c5"></td><td>연단 · 발표자 모니터 <span class="add">추가</span></td><td class="mono">각 1</td><td>발표자가 화면을 돌아보지 않게. 타이머 놓을 자리</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c6"></td><td>테이블·의자</td><td class="mono">테이블 4 · 심사석 2</td><td>등록·집계·시상 준비·심사석. 참가자·관객 좌석 수(평면도)</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c7"></td><td>공용 AV 상주</td><td class="mono">1명</td><td>발표 파일 전환까지 맡아줄 수 있는지 (총괄 부담 해소의 핵심)</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c8"></td><td>공용 촬영 인력</td><td class="mono">1명</td><td>필수 컷 목록 전달: 발표 8팀, 심사, 수상 4팀, 단체</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c9"></td><td>입구 등록 지원 · QR 권한</td><td class="mono">1명 · 단말 계정</td><td>B를 장내 전담으로 돌리기 위해 필요</td><td class="mono">11.03</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="c10"></td><td>Wi-Fi · 콘센트 위치</td><td class="mono">—</td><td>QR 단말 통신, 집계 노트북·프린터 전원</td><td class="mono">11.03</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="group" data-g="D">
+    <h3>D. 보유 장비·대여 <small>11.12 리허설에서 작동 확인</small></h3>
+    <div class="tbl"><table><thead><tr><th></th><th>품목</th><th>수량</th><th>확인할 것</th><th>기한</th></tr></thead><tbody>
+      <tr><td class="chk"><input type="checkbox" id="d1"></td><td>노트북</td><td class="mono">3</td><td>발표 1 · 예비 1 · 집계/상장 1. 충전기, PowerPoint 버전, 폰트 설치</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d2"></td><td>프린터 + 토너/잉크</td><td class="mono">1 + 1세트</td><td>상장 용지 급지, 오프라인 인쇄, 드라이버, USB 케이블</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d3"></td><td>발표 리모컨</td><td class="mono">2</td><td>수신기 단자(USB-A/C) 노트북과 호환</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d4"></td><td>HDMI 케이블 · USB-C→HDMI 어댑터</td><td class="mono">각 2</td><td>참가팀 개인 노트북 연결은 원칙적으로 불허</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d5"></td><td>멀티탭 · 연장선</td><td class="mono">3 · 2</td><td>콘센트 위치 맞춰 길이 확인</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d6"></td><td>QR 스캔 단말</td><td class="mono">2</td><td>본 단말 + 대체 단말, 충전기. 통신 장애 시 명단 대조</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d7"></td><td>무전기 (또는 단체 메신저 + 이어폰)</td><td class="mono">4</td><td>총괄·A·B·AV. 채널·배터리</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d8"></td><td>카메라</td><td class="mono">1</td><td>공용 촬영 인력이 없을 때만. 운영요원 겸직 금지</td><td class="mono">11.12</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="d9"></td><td>직인</td><td class="mono">1</td><td>실날인 방식일 때. 반출 승인</td><td class="mono">11.12</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="group" data-g="E">
+    <h3>E. 내부 출력물 <small>11.11 일괄 출력 · 수량은 심사 2명·8팀 기준</small></h3>
+    <div class="tbl"><table><thead><tr><th></th><th>품목</th><th>수량</th><th>내용·확인</th><th>기한</th></tr></thead><tbody>
+      <tr><td class="chk"><input type="checkbox" id="e1"></td><td>팀별 심사평가표</td><td class="mono">24 (실사용 16)</td><td>순번·팀명 사전 입력, 심사위원별 8장 묶음. 배점 15·15·15·15·20·20</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e2"></td><td>심사 기준 안내</td><td class="mono">4</td><td>배점, 시간, 집계·동점 규정</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e3"></td><td>본선 발표자료집</td><td class="mono">4</td><td>8팀 PDF 묶음, 목차·순서. 페이지가 많으면 출력소 제본</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e4"></td><td>종합 집계표</td><td class="mono">3</td><td>입력자·검수자·최종 확인용</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e5"></td><td>최종 수상 결과 확인서</td><td class="mono">2</td><td>심사위원·확인자 서명란</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e6"></td><td>사회자용 결과지 (빈 양식)</td><td class="mono">2</td><td>시상 순서, 팀명 발음, 시상자 칸</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e7"></td><td>운영 큐시트 (상세)</td><td class="mono">6 + 예비 2</td><td>총괄·A·B·AV·촬영·등록</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e8"></td><td>요약 큐시트 1쪽 <span class="add">추가</span></td><td class="mono">5</td><td>사회자·심사위원·시상자용</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e9"></td><td>사회자 대본</td><td class="mono">2</td><td>개회, 소개, 시간 안내, 휴식, 시상, 폐회</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e10"></td><td>출석·배지 확인 명단</td><td class="mono">2</td><td>연락처 노출 최소화</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e11"></td><td>팀별 진행 안내</td><td class="mono">8 + 예비 2</td><td>순서, 대기 위치, 시간 신호</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e12"></td><td>팀별 좌석표 · 예약석 표시</td><td class="mono">10 · 5</td><td>다음 팀 대기석 표시 포함</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e13"></td><td>입구 안내·방향 표지</td><td class="mono">3–5</td><td>300호, 행사명, 시간표. 현장 동선 확인 후</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e14"></td><td>타임카드</td><td class="mono">4종 × 2 = 8</td><td>3분 전 · 1분 전 · 종료 + <span class="add">Q&A 1분 전</span>. 두꺼운 용지, 색 구분</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e15"></td><td>수상 확인·상금 수령 서류</td><td class="mono">4 + 예비 2</td><td>수령인, 개인정보 동의, 통장 사본 제출 안내 (회계 확정안)</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e16"></td><td>심사위원 공정성 서약서 <span class="add">추가</span></td><td class="mono">2 + 예비 1</td><td>참가팀과 이해관계 없음 확인</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e17"></td><td>심사 사례비 지급 서류 <span class="add">추가</span></td><td class="mono">2 + 예비 1</td><td>지급 확인서, 개인정보 동의 (회계 양식)</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e18"></td><td>촬영 안내문 <span class="add">추가</span></td><td class="mono">1–2</td><td>입구 게시. 사진 홍보 활용 고지</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="e19"></td><td>비상 연락망 카드 <span class="add">추가</span></td><td class="mono">5</td><td>총괄·A·B·사회자·AV·대관처 담당</td><td class="mono">11.11</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="group" data-g="F">
+    <h3>F. 디지털 제작물 <small>원본 체크리스트에 없던 그룹</small></h3>
+    <div class="tbl"><table><thead><tr><th></th><th>품목</th><th>범위</th><th>내용·확인</th><th>기한</th></tr></thead><tbody>
+      <tr><td class="chk"><input type="checkbox" id="f1"></td><td>운영 화면 PPT <span class="add">추가</span></td><td class="mono">1식</td><td>대기 · 타이틀 · 심사위원 소개 · 발표 규칙 · 팀별 표지 8 · 휴식(재개 시각) · 심사 중 · 총평 · 시상 3종 · 단체촬영 · 종료</td><td class="mono">11.09</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="f2"></td><td>수상 화면 사전 제작 <span class="add">추가</span></td><td class="mono">8팀 × 등급</td><td>숨김 슬라이드로 만들어 두고 당일 선택만. 송출 화면과 분리</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="f3"></td><td>상장 이름 파일 <span class="add">추가</span></td><td class="mono">8팀분</td><td>등급만 바꿔 바로 출력. 테스트 인쇄 1회</td><td class="mono">11.11</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="f4"></td><td>발표 파일 폴더</td><td class="mono">8팀</td><td>01_팀명.pptx + PDF, 영상 원본. 11.10 18:00 잠금</td><td class="mono">11.10</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="f5"></td><td>집계 엑셀</td><td class="mono">1</td><td>항목별 배점 초과 경고, 동점 규정 순서대로 정렬, 수식 잠금</td><td class="mono">11.09</td></tr>
+      <tr><td class="chk"><input type="checkbox" id="f6"></td><td>배경음악</td><td class="mono">1식</td><td>입장·휴식·시상. 오프라인 파일</td><td class="mono">11.11</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">6</span>결정이 필요한 것</h2>
+  <div class="box">
+    <ol class="q">
+      <li>사회자는 누구인가? (11.03)</li>
+      <li>시상자는 누구인가? 등급별로 다른가? (11.03)</li>
+      <li>공용 AV가 발표 파일 전환까지 맡을 수 있는가? 안 되면 송출 담당을 누구로 할 것인가? (11.03)</li>
+      <li>전환시간 방식: 22분 슬롯(권장) / Q&A 4분 + 전환 1분 (11.04)</li>
+      <li>상장: 팀당 1매 / 팀원별 발급, 직인 인쇄 / 실날인 (11.04)</li>
+      <li>팀 상금 수령자(대표자/분배), 원천징수, 필요 서류 (11.06, 회계)</li>
+      <li>동점 규정 순서 (11.09)</li>
+      <li>팀별 참석 인원 합계 P (11.06)</li>
+      <li>꽃다발·트로피 제공 여부 (11.06)</li>
+    </ol>
+  </div>
+</section>
+
+<footer>원본: CFC2026 본선 운영계획 엑셀(당일 큐시트·담당 배치·준비 체크리스트·참가팀 관리) · 검토 11.02 · v1</footer>
+</div>
+
+<script>
+(function(){
+  var KEY='cfc2026-check-v1', state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){state={}}
+  var boxes=[].slice.call(document.querySelectorAll('#checklist input[type=checkbox]'));
+  var prog=document.getElementById('progress');
+  function paint(){
+    var done=0;
+    boxes.forEach(function(b){var tr=b.closest('tr');tr.classList.toggle('done',b.checked);if(b.checked)done++;});
+    prog.textContent='완료 '+done+' / '+boxes.length;
+  }
+  boxes.forEach(function(b){
+    b.checked=!!state[b.id];
+    b.addEventListener('change',function(){state[b.id]=b.checked;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}paint();});
+  });
+  paint();
+  var btns=[].slice.call(document.querySelectorAll('.toolbar button'));
+  var groups=[].slice.call(document.querySelectorAll('#checklist .group'));
+  btns.forEach(function(btn){btn.addEventListener('click',function(){
+    var f=btn.getAttribute('data-f');
+    btns.forEach(function(x){x.setAttribute('aria-pressed',String(x===btn))});
+    groups.forEach(function(g){g.hidden=!(f==='all'||g.getAttribute('data-g')===f)});
+  })});
+})();
+</script>
+</body>
+</html>

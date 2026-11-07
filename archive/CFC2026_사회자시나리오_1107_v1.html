@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CFC 2026 사회자 시나리오</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+</head>
+<body>
+<style>
+/* Layout: 무대 대본. 왼쪽 시각 레일 + 오른쪽 큐(작은 회색)·멘트(큰 본문). 팀 블록은 큐시트와 같은 하늘/살구 교차색 */
+:root{
+  --bg:#f7f6f3; --paper:#ffffff; --ink:#1f2421; --muted:#6b706c; --line:#dcdfdb;
+  --green:#234c38; --green-soft:#e6efe9; --odd:#e6f0f9; --even:#fcebe2; --ph:#fff1c2; --ph-ink:#7a5200; --cue:#5c6b63;
+  --sans:"Noto Sans KR",system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --serif:"Noto Serif KR","Nanum Myeongjo",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151816; --paper:#1d211f; --ink:#e9ece9; --muted:#9aa29d; --line:#323835;
+  --green:#8fc7a8; --green-soft:#21302a; --odd:#1c2a36; --even:#35251f; --ph:#4a3b10; --ph-ink:#ffd772; --cue:#9fb1a7; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151816; --paper:#1d211f; --ink:#e9ece9; --muted:#9aa29d; --line:#323835;
+  --green:#8fc7a8; --green-soft:#21302a; --odd:#1c2a36; --even:#35251f; --ph:#4a3b10; --ph-ink:#ffd772; --cue:#9fb1a7; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7}
+.wrap{max-width:920px;margin:0 auto;padding-block:36px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:36px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.3}
+h1{font-family:var(--serif);font-size:1.9rem;font-weight:700}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;color:var(--muted);font-weight:500}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+p{margin:0}
+header.top{display:grid;gap:10px}
+.facts{display:flex;flex-wrap:wrap;gap:6px 22px;color:var(--muted);font-size:.9rem}
+.facts b{color:var(--ink);font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.85rem;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 18px;display:grid;gap:10px;min-width:0}
+.panel h2{font-size:1.05rem}
+.cols{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+ol.order{margin:0;padding:0;list-style:none;display:grid;gap:4px;counter-reset:o}
+ol.order li{display:grid;grid-template-columns:52px 1fr;column-gap:10px;align-items:baseline;counter-increment:o}
+ol.order li small{grid-column:2;color:var(--muted);font-size:.8rem}
+ol.order li .mono{color:var(--green);font-size:.85rem}
+ul.chk{margin:0;padding-left:18px;display:grid;gap:4px;font-size:.92rem}
+nav.jump{display:flex;flex-wrap:wrap;gap:6px}
+nav.jump a{font-size:.85rem;color:var(--green);text-decoration:none;border:1px solid var(--line);background:var(--paper);padding:3px 12px;border-radius:99px}
+nav.jump a:focus-visible,nav.jump a:hover{border-color:var(--green)}
+.part{display:grid;gap:12px;min-width:0}
+.part > h2{font-size:1.25rem;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;padding-bottom:8px;border-bottom:2px solid var(--green)}
+.clock{font-size:.95rem;color:var(--green)}
+.row{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .t{color:var(--green);font-size:.95rem;padding-top:2px}
+.row .c{display:grid;gap:8px;min-width:0}
+.cue{font-size:.82rem;color:var(--cue);background:var(--green-soft);padding:4px 10px;border-radius:4px;justify-self:start}
+.say{font-family:var(--serif);font-size:1.12rem;line-height:1.85;max-width:62ch}
+.say.small{font-size:.98rem;color:var(--muted)}
+.ph{background:var(--ph);color:var(--ph-ink);font-family:var(--sans);font-weight:700;font-size:.9em;padding:0 4px;border-radius:3px}
+.team{border-radius:8px;padding:6px 16px 4px;display:grid}
+.team.odd{background:var(--odd)} .team.even{background:var(--even)}
+.team .row{border-bottom-color:color-mix(in srgb,var(--line) 70%,transparent)}
+.th{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;padding:10px 0 6px}
+.th .no{font-family:var(--mono);color:var(--green);font-size:.9rem}
+.th h3{font-size:1.2rem}
+.th .meta{color:var(--muted);font-size:.85rem}
+.th .time{margin-left:auto;color:var(--green);font-size:.85rem}
+.row.award .say:first-of-type{font-weight:700}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-size:.75rem;color:var(--muted);font-weight:500;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.say-in{font-family:var(--serif)}
+footer{color:var(--muted);font-size:.82rem}
+@media (max-width:560px){.row{grid-template-columns:1fr;gap:4px}.th .time{margin-left:0}h1{font-size:1.5rem}.say{font-size:1.05rem}}
+</style>
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">제15회 월드커피포럼 · Coffee Futures Challenge 2026 본선</span>
+  <h1>사회자 시나리오</h1>
+  <div class="facts"><span>일시 <b>11.13(금) 13:00–17:20</b></span><span>장소 <b>코엑스 3F 컨퍼런스룸 300호</b></span><span>심사 <b>조원진 · 박재현</b></span><span>방식 <b>발표 15분 + Q&A 5분, 전환시간 없음</b></span></div>
+  <div class="legend"><span><span class="cue">[큐]</span> 화면·음향·진행요원 신호 (읽지 않음)</span><span><span class="say" style="font-size:1rem">본문</span> 사회자 멘트</span><span><span class="ph">[ ]</span> 확정 후 채울 내용</span></div>
+</header>
+
+<div class="cols">
+  <div class="panel"><h2>발표 순서 (사이트 공지 기준)</h2><ol class="order"><li><span class="mono">13:10</span><b>고으니</b><small>개인 · 고은희</small></li><li><span class="mono">13:30</span><b>커알못</b><small>오현주·전영채·최예윤·한종아</small></li><li><span class="mono">13:50</span><b>마홍주</b><small>개인 · 마홍주</small></li><li><span class="mono">14:10</span><b>unch</b><small>황채원·홍은채</small></li><li><span class="mono">15:00</span><b>원두잇</b><small>개인 · 전해원</small></li><li><span class="mono">15:20</span><b>원두ONE</b><small>함유선·성유정·백종헌·방주혁</small></li><li><span class="mono">15:40</span><b>이다(ieda)</b><small>박경민·김태희·이영진</small></li><li><span class="mono">16:00</span><b>온에어(OnAir)</b><small>윤지선·정민서·이재윤·이수민</small></li></ol></div>
+  <div class="panel"><h2>대본 확정 전 채울 것</h2><ul class="chk"><li>사회자 이름</li><li>팀별 작품명 8개와 팀 발표자 5명 (11.06 제출 자료 기준)</li><li>개인 참가자 호명 방식: 사이트는 ‘고으니 / 마*주 / 원두잇’으로 표기. 대본은 ‘고으니, 고은희 참가자’ / ‘마홍주 참가자’ / ‘원두잇, 전해원 참가자’로 씀</li><li>‘unch’ 읽는 법 (언치? 운치?) — 팀에 확인</li><li>총평 심사위원 1명, 등급별 시상자</li><li>상장 문안과 수여 명의</li><li>박재현 대표 소속: 명단엔 ‘트러스컴퍼니’, 사이트 소개엔 ‘로프컴퍼니’ — 대본은 SMCC 대표로만 소개</li></ul></div>
+</div>
+
+<nav class="jump" aria-label="구간 바로가기"><a href="#pre">개회 전</a><a href="#open">개회</a><a href="#p1">1부</a><a href="#break">휴식</a><a href="#p2">2부</a><a href="#judge">집계</a><a href="#award">시상·폐회</a><a href="#emergency">돌발 상황</a></nav>
+
+
+<section class="part" id="pre">
+  <h2><span class="clock mono">12:55</span>개회 전 안내</h2>
+  <div class="row"><div class="t mono">12:55</div><div class="c">
+    <p class="cue">[화면] 타이틀 · [음향] 배경음악 작게 · [진행] 1번 고으니 대기석, 심사위원 착석 확인</p>
+    <p class="say">잠시 후 13시부터 커피 퓨처스 챌린지 본선이 시작됩니다. 참가자 여러분과 참석하신 분들께서는 자리에 앉아 주시기 바랍니다.</p>
+    <p class="say">원활한 진행을 위해 휴대전화는 무음이나 진동으로 바꿔 주시기 바랍니다. 발표와 질의응답이 진행되는 동안에는 행사장 출입이 제한되는 점 양해 부탁드립니다. 오늘 현장은 기록과 홍보를 위해 사진과 영상으로 촬영됩니다.</p>
+  </div></div>
+</section>
+
+<section class="part" id="open">
+  <h2><span class="clock mono">13:00–13:10</span>개회 및 대회 소개</h2>
+  <div class="row"><div class="t mono">13:00</div><div class="c">
+    <p class="cue">[총괄 GO] [음향] 배경음악 OFF · 사회자 마이크 ON · [화면] 타이틀</p>
+    <p class="say">안녕하십니까. 제15회 월드커피포럼 프로그램, 커피 퓨처스 챌린지 본선에 오신 여러분을 진심으로 환영합니다. 오늘 진행을 맡은 <span class="ph">[사회자 이름]</span>입니다.</p>
+    <p class="say">커피 퓨처스 챌린지는 커피 산업의 미래와 새로운 가능성을 탐색하는 프로그램입니다. 비즈니스, 서비스, 문화, 기술 등 다양한 분야에서 미래 세대가 제안하는 창의적인 아이디어를 통해 변화하는 커피 산업의 흐름을 살펴보고, 지속 가능한 성장과 혁신의 가능성을 함께 모색하고자 마련되었습니다.</p>
+    <p class="say">오늘 본선에는 8팀, 총 20명의 참가자가 무대에 오릅니다. 본선 진출자 여러분께 큰 박수 부탁드립니다.</p>
+  </div></div>
+  <div class="row"><div class="t mono">13:03</div><div class="c">
+    <p class="cue">[화면] 심사위원 소개 · 호명 시 심사위원 자리에서 일어나 인사</p>
+    <p class="say">오늘 본선 심사를 맡아 주실 두 분을 소개합니다.</p>
+    <p class="say">먼저 조원진 커피 칼럼니스트이십니다. ‘베이루트’라는 필명으로 활동하시며 여러 매체에 커피 글을 기고해 오셨고, 서울카페쇼와 SCA 리테일 서밋 등에서 모더레이터를 맡으셨습니다. 『Korea Specialty Coffee Guide』와 올해 신간 『사사로운 커피사』 등을 쓰셨습니다. 큰 박수 부탁드립니다.</p>
+    <p class="say">다음은 박재현 서울모닝커피클럽, SMCC 대표이십니다. ‘우리는 서울의 아침을 깨운다’는 비전 아래 커피챗, 러닝, 독서, 모닝 레이브 같은 건강한 아침 문화를 제안하며 커뮤니티를 멜버른, 도쿄 등 해외로 넓혀 가고 계십니다. 큰 박수 부탁드립니다.</p>
+  </div></div>
+  <div class="row"><div class="t mono">13:07</div><div class="c">
+    <p class="cue">[화면] 발표 규칙 · [진행] 타임카드 들어 보이기</p>
+    <p class="say">본선 진행 방식을 안내드리겠습니다. 각 팀은 15분 동안 발표하고, 이어서 5분 동안 심사위원 질의응답을 진행합니다.</p>
+    <p class="say">발표 종료 3분 전, 1분 전, 그리고 종료 시점에 진행요원이 이 카드로 알려 드립니다. 종료 카드가 올라가면 발표를 마무리해 주시기 바랍니다. 다음 순서 팀은 앞 팀 발표 중에 대기석으로 안내해 드리니 진행요원의 안내에 따라 주십시오.</p>
+    <p class="say">발표는 1부 네 팀, 30분 휴식 후 2부 네 팀 순서로 진행됩니다. 모든 발표가 끝나면 최종 심사와 집계를 거쳐 16시 50분부터 시상식이 이어집니다. 시상은 대상 1팀 100만 원, 우수상 1팀 50만 원, 장려상 2팀 각 30만 원입니다.</p>
+    <p class="say">그럼 지금부터 본선 발표 1부를 시작하겠습니다.</p>
+  </div></div>
+</section>
+
+<section class="part" id="p1">
+  <h2><span class="clock mono">13:10–14:30</span>본선 발표 1부</h2>
+  
+<article class="team odd" id="t1">
+  <header class="th"><span class="no">01</span><h3>고으니</h3><span class="meta">개인 · 고은희</span><span class="time mono">13:10 – 13:30</span></header>
+  <div class="row"><div class="t mono">13:10</div><div class="c"><p class="cue">[화면] 01번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">1번째 발표입니다. 고으니, 고은희 참가자의 <span class="ph">[작품명]</span>입니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">13:25</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">13:30</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. 고으니, 고은희 참가자에게 다시 한번 큰 박수 부탁드립니다.</p><p class="cue">→ 바로 이어서 2번 커알못 소개. 다음 팀은 이미 대기석에 있으므로 등단만 안내</p></div></div>
+</article>
+<article class="team even" id="t2">
+  <header class="th"><span class="no">02</span><h3>커알못</h3><span class="meta">팀 · 오현주·전영채·최예윤·한종아</span><span class="time mono">13:30 – 13:50</span></header>
+  <div class="row"><div class="t mono">13:30</div><div class="c"><p class="cue">[화면] 02번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">2번째 발표입니다. 커알못 팀의 <span class="ph">[작품명]</span>입니다. 발표는 <span class="ph">[발표자]</span> 님께서 맡아 주시겠습니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">13:45</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">13:50</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. 커알못 팀에게 다시 한번 큰 박수 부탁드립니다.</p><p class="cue">→ 바로 이어서 3번 마홍주 소개. 다음 팀은 이미 대기석에 있으므로 등단만 안내</p></div></div>
+</article>
+<article class="team odd" id="t3">
+  <header class="th"><span class="no">03</span><h3>마홍주</h3><span class="meta">개인 · 마홍주</span><span class="time mono">13:50 – 14:10</span></header>
+  <div class="row"><div class="t mono">13:50</div><div class="c"><p class="cue">[화면] 03번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">3번째 발표입니다. 마홍주 참가자의 <span class="ph">[작품명]</span>입니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">14:05</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">14:10</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. 마홍주 참가자에게 다시 한번 큰 박수 부탁드립니다.</p><p class="cue">→ 바로 이어서 4번 unch 소개. 다음 팀은 이미 대기석에 있으므로 등단만 안내</p></div></div>
+</article>
+<article class="team even" id="t4">
+  <header class="th"><span class="no">04</span><h3>unch</h3><span class="meta">팀 · 황채원·홍은채</span><span class="time mono">14:10 – 14:30</span></header>
+  <div class="row"><div class="t mono">14:10</div><div class="c"><p class="cue">[화면] 04번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">4번째 발표입니다. unch 팀의 <span class="ph">[작품명]</span>입니다. 발표는 <span class="ph">[발표자]</span> 님께서 맡아 주시겠습니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">14:25</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">14:30</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. unch 팀에게 다시 한번 큰 박수 부탁드립니다.</p></div></div>
+</article>
+</section>
+
+<section class="part" id="break">
+  <h2><span class="clock mono">14:30–15:00</span>휴식</h2>
+  <div class="row"><div class="t mono">14:30</div><div class="c">
+    <p class="cue">[화면] 휴식 · 15:00 재개 · [음향] 배경음악 ON · [진행] 1–4번 평가표 회수</p>
+    <p class="say">1부 발표가 모두 끝났습니다. 1부 참가자 모두에게 다시 한번 박수 부탁드립니다.</p>
+    <p class="say">지금부터 30분간 휴식한 뒤 15시 정각에 2부 발표를 시작하겠습니다. 2부 첫 순서는 원두잇입니다. 발표와 질의응답 중에는 출입이 제한되니 14시 55분까지 자리로 돌아와 주시기 바랍니다.</p>
+  </div></div>
+  <div class="row"><div class="t mono">14:55</div><div class="c">
+    <p class="cue">[진행] 심사위원 복귀 확인 · 5번 원두잇 대기석</p>
+    <p class="say">잠시 후 2부 발표가 시작됩니다. 모두 자리에 앉아 주시고, 휴대전화는 다시 한번 무음으로 확인 부탁드립니다.</p>
+  </div></div>
+</section>
+
+<section class="part" id="p2">
+  <h2><span class="clock mono">15:00–16:20</span>본선 발표 2부</h2>
+  <div class="row"><div class="t mono">15:00</div><div class="c">
+    <p class="cue">[총괄 GO] [음향] 배경음악 OFF</p>
+    <p class="say">지금부터 본선 발표 2부를 시작하겠습니다.</p>
+  </div></div>
+  
+<article class="team odd" id="t5">
+  <header class="th"><span class="no">05</span><h3>원두잇</h3><span class="meta">개인 · 전해원</span><span class="time mono">15:00 – 15:20</span></header>
+  <div class="row"><div class="t mono">15:00</div><div class="c"><p class="cue">[화면] 05번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">5번째 발표입니다. 원두잇, 전해원 참가자의 <span class="ph">[작품명]</span>입니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">15:15</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">15:20</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. 원두잇, 전해원 참가자에게 다시 한번 큰 박수 부탁드립니다.</p><p class="cue">→ 바로 이어서 6번 원두ONE 소개. 다음 팀은 이미 대기석에 있으므로 등단만 안내</p></div></div>
+</article>
+<article class="team even" id="t6">
+  <header class="th"><span class="no">06</span><h3>원두ONE</h3><span class="meta">팀 · 함유선·성유정·백종헌·방주혁</span><span class="time mono">15:20 – 15:40</span></header>
+  <div class="row"><div class="t mono">15:20</div><div class="c"><p class="cue">[화면] 06번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">6번째 발표입니다. 원두ONE 팀의 <span class="ph">[작품명]</span>입니다. 발표는 <span class="ph">[발표자]</span> 님께서 맡아 주시겠습니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">15:35</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">15:40</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. 원두ONE 팀에게 다시 한번 큰 박수 부탁드립니다.</p><p class="cue">→ 바로 이어서 7번 이다(ieda) 소개. 다음 팀은 이미 대기석에 있으므로 등단만 안내</p></div></div>
+</article>
+<article class="team odd" id="t7">
+  <header class="th"><span class="no">07</span><h3>이다(ieda)</h3><span class="meta">팀 · 박경민·김태희·이영진</span><span class="time mono">15:40 – 16:00</span></header>
+  <div class="row"><div class="t mono">15:40</div><div class="c"><p class="cue">[화면] 07번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">7번째 발표입니다. 이다(ieda) 팀의 <span class="ph">[작품명]</span>입니다. 발표는 <span class="ph">[발표자]</span> 님께서 맡아 주시겠습니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">15:55</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">16:00</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. 이다(ieda) 팀에게 다시 한번 큰 박수 부탁드립니다.</p><p class="cue">→ 바로 이어서 8번 온에어(OnAir) 소개. 다음 팀은 이미 대기석에 있으므로 등단만 안내</p></div></div>
+</article>
+<article class="team even" id="t8">
+  <header class="th"><span class="no">08</span><h3>온에어(OnAir)</h3><span class="meta">팀 · 윤지선·정민서·이재윤·이수민</span><span class="time mono">16:00 – 16:20</span></header>
+  <div class="row"><div class="t mono">16:00</div><div class="c"><p class="cue">[화면] 08번 표지 → 발표 자료 · [진행] 발표자 등단, 마이크·리모컨 전달 · 타이머 시작</p>
+    <p class="say">8번째 발표입니다. 온에어(OnAir) 팀의 <span class="ph">[작품명]</span>입니다. 발표는 <span class="ph">[발표자]</span> 님께서 맡아 주시겠습니다. 큰 박수로 맞아 주시기 바랍니다.</p></div></div>
+  <div class="row"><div class="t mono">16:15</div><div class="c"><p class="cue">[카드] 3분 전 → 1분 전 → 종료 확인 후</p>
+    <p class="say">발표 감사합니다. 이어서 5분간 심사위원 질의응답을 진행하겠습니다. 심사위원님, 질문 부탁드립니다.</p></div></div>
+  <div class="row"><div class="t mono">16:20</div><div class="c"><p class="cue">[카드] Q&A 1분 전 → 종료</p>
+    <p class="say">질의응답 시간이 모두 끝났습니다. 온에어(OnAir) 팀에게 다시 한번 큰 박수 부탁드립니다.</p></div></div>
+</article>
+</section>
+
+<section class="part" id="judge">
+  <h2><span class="clock mono">16:20–16:50</span>최종 심사 및 집계</h2>
+  <div class="row"><div class="t mono">16:20</div><div class="c">
+    <p class="cue">[화면] 심사 중 · [음향] 배경음악 ON · [진행] 최종 평가표 회수</p>
+    <p class="say">이것으로 본선 발표 8팀이 모두 끝났습니다. 오랜 시간 준비해 주신 참가자 여러분 모두에게 큰 박수 부탁드립니다.</p>
+    <p class="say">지금부터 심사위원 최종 심사와 집계가 진행됩니다. 시상식은 16시 50분에 시작합니다. 시상식과 단체 사진 촬영까지 본선 진출자 모두 함께해 주셔야 하니, 16시 45분까지 자리로 돌아와 주시기 바랍니다.</p>
+  </div></div>
+  <div class="row"><div class="t mono">16:45</div><div class="c">
+    <p class="cue">[총괄] 결과지 전달 확인 전에는 아래 멘트만. 결과지는 16:48–16:50 수령</p>
+    <p class="say">잠시 후 시상식이 시작됩니다. 참가자 여러분께서는 자리에 앉아 주시기 바랍니다.</p>
+  </div></div>
+</section>
+
+<section class="part" id="award">
+  <h2><span class="clock mono">16:50–17:20</span>시상식 및 폐회</h2>
+  <div class="row"><div class="t mono">16:50</div><div class="c">
+    <p class="cue">[총괄 GO] [음향] 배경음악 OFF · [화면] 총평</p>
+    <p class="say">지금부터 2026 커피 퓨처스 챌린지 시상식을 시작하겠습니다. 시상에 앞서 <span class="ph">[총평 심사위원]</span> 님께서 오늘 본선 총평을 해 주시겠습니다. 큰 박수로 모시겠습니다.</p>
+    <p class="cue">총평 5분 이내 · 종료 후</p>
+    <p class="say">좋은 말씀 감사합니다. 박수 부탁드립니다.</p>
+  </div></div>
+  <div class="row award"><div class="t mono">16:55</div><div class="c">
+    <p class="cue">[화면] 장려상 · 호명 후 수상자 등단 → 상장·보드 전달 → 정면 사진 → 퇴장</p>
+    <p class="say">먼저 장려상입니다. 장려상은 두 팀에게 수여되며, 각각 상금 30만 원이 함께 주어집니다. 첫 번째 장려상 수상자는… <span class="ph">[팀명]</span>입니다! 축하드립니다.</p>
+    <p class="say">시상은 <span class="ph">[시상자]</span> 님께서 해 주시겠습니다. 수상자께서는 앞으로 나와 주시기 바랍니다.</p>
+    <p class="cue">상장 낭독은 첫 상장만 (아래 문안), 이후 “이하 내용은 같아 생략합니다”</p>
+    <p class="say small">상장. 장려상. <span class="ph">[팀명]</span>. 위 팀은 2026 커피 퓨처스 챌린지 본선에서 우수한 성적을 거두었기에 이 상장을 수여합니다. 2026년 11월 13일. <span class="ph">[수여 기관·명의]</span></p>
+    <p class="say">사진 촬영 있겠습니다. 정면을 봐 주세요. 다시 한번 축하드립니다.</p>
+  </div></div>
+  <div class="row award"><div class="t mono">16:59</div><div class="c">
+    <p class="cue">[화면] 장려상</p>
+    <p class="say">두 번째 장려상 수상자는… <span class="ph">[팀명]</span>입니다! 축하드립니다. 시상은 <span class="ph">[시상자]</span> 님께서 해 주시겠습니다. 상장 내용은 같아 생략하겠습니다.</p>
+    <p class="say">사진 촬영 있겠습니다. 축하드립니다.</p>
+  </div></div>
+  <div class="row award"><div class="t mono">17:03</div><div class="c">
+    <p class="cue">[화면] 우수상</p>
+    <p class="say">다음은 우수상입니다. 우수상에는 상금 50만 원이 함께 주어집니다. 우수상 수상자는… <span class="ph">[팀명]</span>입니다! 축하드립니다. 시상은 <span class="ph">[시상자]</span> 님께서 해 주시겠습니다. 상장 내용은 같아 생략하겠습니다.</p>
+    <p class="say">사진 촬영 있겠습니다. 축하드립니다.</p>
+  </div></div>
+  <div class="row award"><div class="t mono">17:09</div><div class="c">
+    <p class="cue">[화면] 대상 · 호명 전 2–3초 멈춤</p>
+    <p class="say">이제 오늘의 마지막, 대상 발표만 남았습니다. 대상에는 상금 100만 원이 주어집니다. 2026 커피 퓨처스 챌린지 대상의 주인공은… <span class="ph">[팀명]</span>입니다! 진심으로 축하드립니다. 시상은 <span class="ph">[시상자]</span> 님께서 해 주시겠습니다. 상장 내용은 같아 생략하겠습니다.</p>
+    <p class="say">사진 촬영 있겠습니다. 오늘의 대상 수상자에게 다시 한번 뜨거운 박수 부탁드립니다.</p>
+  </div></div>
+  <div class="row"><div class="t mono">17:15</div><div class="c">
+    <p class="cue">[화면] 단체 촬영 · [진행] 앞줄 수상자·심사위원·시상자, 뒷줄 본선 진출자</p>
+    <p class="say">수상하신 분들뿐 아니라 오늘 본선에 오른 모든 참가자께서 함께 단체 사진을 찍겠습니다. 심사위원님과 시상자께서도 앞으로 나와 주시기 바랍니다.</p>
+  </div></div>
+  <div class="row"><div class="t mono">17:18</div><div class="c">
+    <p class="cue">[화면] 종료 · 폐회 후 [음향] 배경음악 ON</p>
+    <p class="say">바쁘신 가운데 심사를 맡아 주신 조원진 칼럼니스트님, 박재현 대표님께 감사드립니다. 그리고 커피 산업의 미래를 함께 고민해 주신 본선 진출자 여러분 모두 수고 많으셨습니다.</p>
+    <p class="say">수상하신 분들께서는 행사 후 운영 데스크에서 상금 지급 서류 안내를 받아 주시기 바랍니다. 본선 진출자 여러분께서는 퇴장하실 때 운영 데스크에서 준비한 기념품을 꼭 받아 가시기 바랍니다.</p>
+    <p class="say">이상으로 제15회 월드커피포럼 커피 퓨처스 챌린지 본선을 모두 마치겠습니다. 감사합니다.</p>
+  </div></div>
+</section>
+
+
+<section class="part" id="emergency">
+  <h2>돌발 상황 멘트</h2>
+  <div class="tbl"><table><thead><tr><th>상황</th><th>사회자 멘트</th><th>운영 조치</th></tr></thead><tbody><tr><td>발표 자료가 안 열리거나 화면이 꺼질 때</td><td class="say-in">잠시 자료 연결을 확인하고 있습니다. 조금만 기다려 주시기 바랍니다.</td><td>2분 넘으면 총괄 판단으로 다음 팀 먼저 진행, 해당 팀은 뒤로</td></tr><tr><td>종료 카드 후에도 발표가 이어질 때 (30초)</td><td class="say-in">발표 시간이 모두 끝났습니다. 마무리 한 말씀 부탁드립니다.</td><td>Q&A 시간은 줄이지 않음</td></tr><tr><td>심사위원 질문이 일찍 끝났을 때</td><td class="say-in">심사위원님, 추가로 질문하실 내용 있으실까요? (없으면) 네, 질의응답을 마치겠습니다.</td><td>남는 시간은 다음 팀 시작을 앞당기지 않고 정시 시작</td></tr><tr><td>다음 팀이 대기석에 없을 때</td><td class="say-in">다음 순서 팀 준비를 잠시 확인하겠습니다.</td><td>총괄 판단으로 그다음 팀과 순서 교체</td></tr><tr><td>일정이 5분 이상 늦어졌을 때</td><td class="say-in">원활한 진행을 위해 휴식 시간을 조정해 15시 <span class="ph">[분]</span>에 2부를 시작하겠습니다.</td><td>휴식 30분에서 흡수, 발표·Q&A 시간은 유지</td></tr><tr><td>집계가 늦어질 때</td><td class="say-in">심사 결과를 최종 확인하고 있습니다. 잠시만 기다려 주시기 바랍니다.</td><td>결과지를 받기 전에는 수상 관련 언급 금지</td></tr></tbody></table></div>
+</section>
+
+<footer>CFC2026_사회자시나리오_1107_v1 · 사이트 진행 순서·심사위원 소개(11.07 확인)와 운영계획 v6 큐시트 기준</footer>
+</div>
+</body>
+</html>

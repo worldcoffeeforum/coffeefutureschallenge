@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CFC 2026 운영매뉴얼</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap">
+</head>
+<body>
+<style>
+/* WCF 2026 쇼가이드 미니멀 테마를 따름: 먹색 + 회색 단계 + 포인트 그린 하나, 굵기 300–600, 카드 대신 1px 구분선 */
+:root{
+  --page:#F4F4F2; --bg:#FFFFFF; --k:#1A1A1A; --k2:#555555; --mut:#8A8A8A; --line:#ECECEA; --soft:#F6F6F4;
+  --g:#7FAE4E; --gd:#4F7A26; --warn:#B05A3C; --amber:#9A7B1E; --r:10px; --max:560px;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:64px;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);font-weight:400;background:var(--page);color:var(--k);line-height:1.6;letter-spacing:-.005em;word-break:keep-all;overflow-wrap:break-word;-webkit-font-smoothing:antialiased;font-size:14px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:rgba(255,255,255,.94)}
+b,strong{font-weight:600}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:1.5px solid var(--k);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:var(--max);margin:0 auto;background:var(--bg);min-height:100vh;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.px{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.ed{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gd)}
+.theme{font-size:38px;font-weight:300;line-height:1.05;letter-spacing:-.035em}
+.mh{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.info{border-top:1px solid var(--k)}
+.kv{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv dt{font-size:12px;font-weight:500;color:var(--mut);padding-top:2px}
+.dot{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500}
+.dot::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.dot.ok{color:var(--gd)} .dot.wait{color:var(--warn)} .dot.mid{color:var(--amber)} .dot.none{color:var(--mut)}
+.sec{padding-block:40px 32px;border-top:1px solid var(--line)}
+.sh{margin-bottom:20px;display:grid;gap:2px}
+.sh h2{font-size:21px;font-weight:600;letter-spacing:-.025em;line-height:1.25}
+.sh p{font-size:12.5px;color:var(--mut)}
+.dock{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;padding-top:8px}
+.dock::-webkit-scrollbar{display:none}
+.dock a{flex:none;font-size:13px;font-weight:500;color:var(--mut);text-decoration:none;padding:6px 0 9px;white-space:nowrap;border-bottom:1.5px solid transparent}
+.dock a.cur{color:var(--k);border-bottom-color:var(--k)}
+.btn{display:block;text-align:center;font-size:14px;font-weight:500;text-decoration:none;border:1px solid var(--k);border-radius:var(--r);padding:13px;background:var(--bg)}
+.btn.fill{background:var(--k);color:#fff}
+.note{font-size:12px;color:var(--mut)}
+footer{border-top:1px solid var(--line);color:var(--mut);padding-block:24px calc(28px + env(safe-area-inset-bottom,0px));font-size:12px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* page */
+.home{padding-block:44px 32px;display:grid;gap:6px}
+.home h1{font-size:15px;font-weight:500;color:var(--k2)}
+.home .theme{margin:6px 0 26px}
+.now-line{margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px}
+.now-line a{color:var(--k2);font-size:12.5px;text-underline-offset:3px}
+.live-dot{display:inline-flex;align-items:center;gap:7px;font-weight:500}
+.live-dot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--g)}
+.live-dot.on::before{animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.links{display:grid;gap:8px;margin-top:20px}
+/* timeline */
+.tl{list-style:none}
+.gh{font-size:11px;font-weight:500;letter-spacing:.14em;color:var(--mut);padding:22px 0 6px;border-bottom:1px solid var(--k)}
+.gh:first-child{padding-top:0}
+.gi{display:grid;grid-template-columns:52px 1fr;column-gap:14px;padding:14px 0;border-bottom:1px solid var(--line);position:relative}
+.gi time{font-size:14px;font-weight:500;line-height:1.3;display:flex;flex-direction:column}
+.gi time i{font-style:normal;font-size:11.5px;color:var(--mut);font-weight:400}
+.gp{font-weight:500;font-size:14.5px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.gr{font-size:12.5px;color:var(--k2);margin-top:2px}
+.gw{font-size:12px;color:var(--mut);margin-top:2px}
+.gn{font-size:12px;color:var(--mut);margin-top:4px;padding-left:10px;border-left:1px solid var(--line)}
+.t-odd{background:var(--soft)}
+.gi.t-odd,.tm.t-odd{margin:0 calc(-1 * max(24px,env(safe-area-inset-left,0px)));padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.live{display:none;font-style:normal;font-size:11px;font-weight:500;color:var(--gd);align-items:center;gap:6px}
+.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 1.6s infinite}
+.gi.is-now .live{display:inline-flex}
+.gi.is-now .gp{color:var(--gd)}
+.gi.is-past{opacity:.4}
+/* teams */
+.tms{list-style:none}
+.tm{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:18px 0;border-bottom:1px solid var(--line)}
+.tn{font-size:22px;font-weight:300;letter-spacing:-.03em;color:var(--mut);line-height:1.1}
+.tt{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.tt b{font-size:16px}
+.tt time{font-size:12.5px;color:var(--mut);font-weight:500}
+.tmem{font-size:13.5px;margin-top:4px} .tmem span,.tmeta{font-size:12px;color:var(--mut)}
+.tcall{font-size:13px;color:var(--k2);margin-top:2px} .tcall span{font-size:11px;font-weight:500;color:var(--mut);margin-right:8px}
+.tmeta{margin:2px 0 6px}
+/* floor */
+.floor svg{display:block;width:100%;height:auto}
+.floor svg text{font-family:var(--sans)}
+.steps{list-style:none;counter-reset:s;margin-top:20px;border-top:1px solid var(--k)}
+.steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.steps li::before{content:counter(s);font-size:12px;font-weight:500;color:var(--gd);padding-top:1px}
+/* signs */
+.signs{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--k)}
+.sign{padding:18px 0;border-bottom:1px solid var(--line);display:grid;gap:2px}
+.sign+.sign{padding-left:18px;border-left:1px solid var(--line)}
+.sign b{font-size:40px;font-weight:300;letter-spacing:-.04em;line-height:1}
+.sign span{font-size:12px;color:var(--mut)}
+.script{background:var(--soft);border-radius:var(--r);padding:16px 18px;margin-top:16px;font-size:13.5px;line-height:1.75;color:var(--k2)}
+.script small{display:block;font-size:11px;font-weight:500;letter-spacing:.1em;color:var(--mut);margin-bottom:6px}
+.rd{font-size:12.5px;color:var(--k2);margin-top:2px}
+/* checklist */
+.ckg{margin-top:26px} .ckg:first-child{margin-top:0}
+.ckg h4{font-size:13px;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--k);display:flex;justify-content:space-between}
+.ckg h4 small{font-weight:400;color:var(--mut);font-size:12px}
+.opt{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;font-size:13.5px}
+.opt input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1px solid #BDBDBA;border-radius:4px;margin-top:1px;display:grid;place-items:center;background:var(--bg)}
+.opt input:checked{background:var(--k);border-color:var(--k)}
+.opt input:checked::after{content:"";width:9px;height:5px;border:solid #fff;border-width:0 0 1.5px 1.5px;transform:rotate(-45deg) translate(1px,-1px)}
+.opt input:checked+span{color:var(--mut);text-decoration:line-through;text-decoration-color:#CFCFCC}
+.em .kv{grid-template-columns:110px 1fr}
+.em dd{font-size:13.5px;color:var(--k2)}
+@media (min-width:400px){.theme{font-size:44px}}
+</style>
+<div class="wrap">
+<header class="home px">
+  <span class="ed">WCF 2026 · Staff only</span>
+  <h1>제15회 월드커피포럼 커피 퓨처스 챌린지 본선</h1>
+  <p class="theme">운영매뉴얼</p>
+  <dl class="info">
+    <div class="kv"><dt>일시</dt><dd class="num">11.13 (금) 10:00 입실 · 13:00–17:20</dd></div>
+    <div class="kv"><dt>장소</dt><dd>3F · 컨퍼런스룸 300호</dd></div>
+    <div class="kv"><dt>심사</dt><dd>조원진 · 박재현 <span class="note">12:30 도착</span></dd></div>
+    <div class="kv"><dt>방식</dt><dd>발표 15분 · Q&amp;A 5분 · 전환 없음</dd></div>
+  </dl>
+  <div class="now-line"><span class="live-dot" id="dday">D-6</span><a href="#timeline" id="nowlink" hidden>지금 순서 보기</a></div>
+  <div class="links"><a class="btn fill" href="https://claude.ai/artifact/RgGcQAeahVdd6cXXsW7NeN" target="_blank" rel="noopener">실시간 심사표</a><a class="btn" href="mc.html" target="_blank" rel="noopener">사회자 시나리오</a></div>
+</header>
+
+<nav class="dock px" aria-label="섹션"><a href="#timeline">타임라인</a><a href="#teams">발표 순서</a><a href="#floor">좌석·동선</a><a href="#signs">사인</a><a href="#roles">역할</a><a href="#check">준비물</a><a href="#emergency">돌발</a></nav>
+
+<section class="sec px" id="timeline">
+  <div class="sh"><h2>타임라인</h2><p>11.13 당일에는 지금 순서에 초록 점이 표시됩니다</p></div>
+  <ol class="tl">
+<li class="gh">준비</li><li class="gi" data-s="600" data-e="620">
+<time class="num">10:00<i>10:20</i></time>
+<div><p class="gp">입실·배치<em class="live">진행 중</em></p><p class="gr">입실 허가 / 참가팀 좌석 / 심사석 / 다음 팀 대기석 / 등록 위치 / 이동 통로</p><p class="gw">백종아 · 운영요원 A·B</p><p class="gn">10:00 입실 대관 확인</p></div></li>
+<li class="gi" data-s="620" data-e="640">
+<time class="num">10:20<i>10:40</i></time>
+<div><p class="gp">음향·영상 테스트<em class="live">진행 중</em></p><p class="gr">마이크 3+예비 / 심사석 고정 마이크 / 8팀 PPTX·PDF / 영상 소리 / 리모컨 / 예비 노트북</p><p class="gw">AV(공용) · 백종아·운영요원 B</p><p class="gn">공용 AV 상주 확정 필요</p></div></li>
+<li class="gi" data-s="640" data-e="650">
+<time class="num">10:40<i>10:50</i></time>
+<div><p class="gp">상장 출력 테스트<em class="live">진행 중</em></p><p class="gr">상장 급지 / 이름 위치 / 직인 / 케이스 / 프린터</p><p class="gw">백종아 · 운영요원 B</p></div></li>
+<li class="gi" data-s="650" data-e="660">
+<time class="num">10:50<i>11:00</i></time>
+<div><p class="gp">운영 브리핑<em class="live">진행 중</em></p><p class="gr">시간 신호 / 연락망 / 출입 / 집계·시상 역할 / 교대 식사 순서</p><p class="gw">백종아 · 운영요원 A·B·AV</p></div></li>
+<li class="gh">등록</li><li class="gi" data-s="660" data-e="720">
+<time class="num">11:00<i>12:00</i></time>
+<div><p class="gp">등록·출석 확인<em class="live">진행 중</em></p><p class="gr">팀원명 대조 / QR / 배지 / 발표자 확인 / 좌석 안내</p><p class="gw">운영요원 A · 운영요원 B</p><p class="gn">11:30–12:30 운영진 교대 식사(도시락)</p></div></li>
+<li class="gi" data-s="720" data-e="750">
+<time class="num">12:00<i>12:30</i></time>
+<div><p class="gp">미도착팀 확인·기술 문의<em class="live">진행 중</em></p><p class="gr">미도착 연락 / 최종 파일 일치 / 임의 교체 제한(11.10 잠금본 기준)</p><p class="gw">운영요원 A · 백종아</p></div></li>
+<li class="gh">사전 안내</li><li class="gi" data-s="750" data-e="760">
+<time class="num">12:30<i>12:40</i></time>
+<div><p class="gp">사회자 브리핑<em class="live">진행 중</em></p><p class="gr">호명·발음 / 팀 순서 / 시간 신호 / 시상 대본</p><p class="gw">백종아 · 사회자</p></div></li>
+<li class="gi" data-s="760" data-e="770">
+<time class="num">12:40<i>12:50</i></time>
+<div><p class="gp">심사위원 브리핑<em class="live">진행 중</em></p><p class="gr">배점 / 동점 규정 / 회수 시점 / 총평자 / 서약서·사례비 서류 서명</p><p class="gw">백종아 · 운영요원 B</p><p class="gn">심사위원 12:30 도착 확정</p></div></li>
+<li class="gh">개회 대기</li><li class="gi" data-s="770" data-e="775">
+<time class="num">12:50<i>12:55</i></time>
+<div><p class="gp">참가팀 최종 착석<em class="live">진행 중</em></p><p class="gr">8팀 출석 / 발표자·순서 / 대기석 / 시간 규칙</p><p class="gw">운영요원 A · 운영요원 B</p></div></li>
+<li class="gi" data-s="775" data-e="780">
+<time class="num">12:55<i>13:00</i></time>
+<div><p class="gp">개회 5분 전<em class="live">진행 중</em></p><p class="gr">1번 팀 대기석 / 심사위원 착석 / MC 대기 / 지각 인계</p><p class="gw">백종아 · 운영요원 A·B</p></div></li>
+<li class="gh">개회</li><li class="gi" data-s="780" data-e="783">
+<time class="num">13:00<i>13:03</i></time>
+<div><p class="gp">개회사·행사 소개<em class="live">진행 중</em></p><p class="gr">총괄 GO / 마이크 ON / 대회명 확인</p><p class="gw">사회자 · 백종아</p></div></li>
+<li class="gi" data-s="783" data-e="787">
+<time class="num">13:03<i>13:07</i></time>
+<div><p class="gp">심사위원 소개<em class="live">진행 중</em></p><p class="gr">조원진 커피 칼럼니스트 / 박재현 대표(서울모닝커피클럽) / 소개 순서</p><p class="gw">사회자 · 백종아</p></div></li>
+<li class="gi" data-s="787" data-e="790">
+<time class="num">13:07<i>13:10</i></time>
+<div><p class="gp">발표 규칙 안내<em class="live">진행 중</em></p><p class="gr">15분 발표 + 5분 Q&amp;A / 남은 시간 5분·2분에 뒤에서 사인 / 다음 팀은 뒷줄 오른쪽에서 대기 후 앞 팀 Q&amp;A 종료 즉시 발표 자리로</p><p class="gw">사회자 · 운영요원 A</p></div></li>
+<li class="gh">본선</li><li class="gi t-odd" data-s="790" data-e="805">
+<time class="num">13:10<i>13:25</i></time>
+<div><p class="gp">1번 팀 발표 (15분) · 고으니<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 13:20 · 2분 남음 사인 13:23 · 발표 종료 13:25</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인 / 발표 중 B가 2번 팀을 뒤로 불러 반시계 방향으로 뒷줄 오른쪽 대기, 시간 엄수 등 주의사항 고지 / 백종아 02번 파일 준비</p></div></li>
+<li class="gi t-odd" data-s="805" data-e="810">
+<time class="num">13:25<i>13:30</i></time>
+<div><p class="gp">1번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 13:30 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석 / Q&amp;A 종료 즉시 2번 팀 발표 자리로(전환시간 없음)</p></div></li>
+<li class="gi t-even" data-s="810" data-e="825">
+<time class="num">13:30<i>13:45</i></time>
+<div><p class="gp">2번 팀 발표 (15분) · 커알못<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 13:40 · 2분 남음 사인 13:43 · 발표 종료 13:45</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인 / 발표 중 B가 3번 팀을 뒤로 불러 반시계 방향으로 뒷줄 오른쪽 대기, 시간 엄수 등 주의사항 고지 / 백종아 03번 파일 준비</p></div></li>
+<li class="gi t-even" data-s="825" data-e="830">
+<time class="num">13:45<i>13:50</i></time>
+<div><p class="gp">2번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 13:50 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석 / Q&amp;A 종료 즉시 3번 팀 발표 자리로(전환시간 없음)</p></div></li>
+<li class="gi t-odd" data-s="830" data-e="845">
+<time class="num">13:50<i>14:05</i></time>
+<div><p class="gp">3번 팀 발표 (15분) · 마홍주<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 14:00 · 2분 남음 사인 14:03 · 발표 종료 14:05</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인 / 발표 중 B가 4번 팀을 뒤로 불러 반시계 방향으로 뒷줄 오른쪽 대기, 시간 엄수 등 주의사항 고지 / 백종아 04번 파일 준비</p></div></li>
+<li class="gi t-odd" data-s="845" data-e="850">
+<time class="num">14:05<i>14:10</i></time>
+<div><p class="gp">3번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 14:10 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석 / Q&amp;A 종료 즉시 4번 팀 발표 자리로(전환시간 없음)</p></div></li>
+<li class="gi t-even" data-s="850" data-e="865">
+<time class="num">14:10<i>14:25</i></time>
+<div><p class="gp">4번 팀 발표 (15분) · unch<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 14:20 · 2분 남음 사인 14:23 · 발표 종료 14:25</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인 / 발표 중 B가 5번 팀을 뒤로 불러 반시계 방향으로 뒷줄 오른쪽 대기, 시간 엄수 등 주의사항 고지 / 백종아 05번 파일 준비</p></div></li>
+<li class="gi t-even" data-s="865" data-e="870">
+<time class="num">14:25<i>14:30</i></time>
+<div><p class="gp">4번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 14:30 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석 / Q&amp;A 종료 즉시 5번 팀 발표 자리로(전환시간 없음)</p></div></li>
+<li class="gh">휴식</li><li class="gi" data-s="870" data-e="875">
+<time class="num">14:30<i>14:35</i></time>
+<div><p class="gp">휴식 안내·1–4번 평가표 회수<em class="live">진행 중</em></p><p class="gr">15:00 재개 고지 / 1–4번 평가표 누락 확인</p><p class="gw">운영요원 B · 사회자</p></div></li>
+<li class="gi" data-s="875" data-e="885">
+<time class="num">14:35<i>14:45</i></time>
+<div><p class="gp">1–4번 점수 입력<em class="live">진행 중</em></p><p class="gr">항목 누락·배점 초과 / 원본 순번 대조</p><p class="gw">백종아 · 운영요원 B</p><p class="gn">집계는 송출 화면에 연결 금지</p></div></li>
+<li class="gi" data-s="885" data-e="895">
+<time class="num">14:45<i>14:55</i></time>
+<div><p class="gp">중간 점수 검수<em class="live">진행 중</em></p><p class="gr">B가 원본 대조 / 백종아 오류 확인 / A 교대 휴식</p><p class="gw">운영요원 B · 백종아</p></div></li>
+<li class="gi" data-s="895" data-e="900">
+<time class="num">14:55<i>15:00</i></time>
+<div><p class="gp">재입장·5번 팀 대기<em class="live">진행 중</em></p><p class="gr">심사위원 복귀 / 5번 팀 대기석 / 6번 팀 대기 준비</p><p class="gw">운영요원 A · 사회자</p></div></li>
+<li class="gh">본선</li><li class="gi t-odd" data-s="900" data-e="915">
+<time class="num">15:00<i>15:15</i></time>
+<div><p class="gp">5번 팀 발표 (15분) · 원두잇<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 15:10 · 2분 남음 사인 15:13 · 발표 종료 15:15</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인 / 발표 중 B가 6번 팀을 뒤로 불러 반시계 방향으로 뒷줄 오른쪽 대기, 시간 엄수 등 주의사항 고지 / 백종아 06번 파일 준비</p></div></li>
+<li class="gi t-odd" data-s="915" data-e="920">
+<time class="num">15:15<i>15:20</i></time>
+<div><p class="gp">5번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 15:20 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석 / Q&amp;A 종료 즉시 6번 팀 발표 자리로(전환시간 없음)</p></div></li>
+<li class="gi t-even" data-s="920" data-e="935">
+<time class="num">15:20<i>15:35</i></time>
+<div><p class="gp">6번 팀 발표 (15분) · 원두ONE<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 15:30 · 2분 남음 사인 15:33 · 발표 종료 15:35</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인 / 발표 중 B가 7번 팀을 뒤로 불러 반시계 방향으로 뒷줄 오른쪽 대기, 시간 엄수 등 주의사항 고지 / 백종아 07번 파일 준비</p></div></li>
+<li class="gi t-even" data-s="935" data-e="940">
+<time class="num">15:35<i>15:40</i></time>
+<div><p class="gp">6번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 15:40 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석 / Q&amp;A 종료 즉시 7번 팀 발표 자리로(전환시간 없음)</p></div></li>
+<li class="gi t-odd" data-s="940" data-e="955">
+<time class="num">15:40<i>15:55</i></time>
+<div><p class="gp">7번 팀 발표 (15분) · 이다(ieda)<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 15:50 · 2분 남음 사인 15:53 · 발표 종료 15:55</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인 / 발표 중 B가 8번 팀을 뒤로 불러 반시계 방향으로 뒷줄 오른쪽 대기, 시간 엄수 등 주의사항 고지 / 백종아 08번 파일 준비</p></div></li>
+<li class="gi t-odd" data-s="955" data-e="960">
+<time class="num">15:55<i>16:00</i></time>
+<div><p class="gp">7번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 16:00 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석 / Q&amp;A 종료 즉시 8번 팀 발표 자리로(전환시간 없음)</p></div></li>
+<li class="gi t-even" data-s="960" data-e="975">
+<time class="num">16:00<i>16:15</i></time>
+<div><p class="gp">8번 팀 발표 (15분) · 온에어(OnAir)<em class="live">진행 중</em></p><p class="gr">타이머 시작 · 5분 남음 사인 16:10 · 2분 남음 사인 16:13 · 발표 종료 16:15</p><p class="gw">AV(공용) · 운영요원 A(뒤에서 사인)</p><p class="gn">자료 일치·리모컨 확인</p></div></li>
+<li class="gi t-even" data-s="975" data-e="980">
+<time class="num">16:15<i>16:20</i></time>
+<div><p class="gp">8번 팀 Q&amp;A (5분)<em class="live">진행 중</em></p><p class="gr">심사석 고정 마이크 · Q&amp;A 종료 16:20 (사회자가 마무리)</p><p class="gw">사회자 · 운영요원 A(타이머)</p><p class="gn">발표 팀원은 발표자와 함께 서거나 앞줄 오른쪽 테이블 착석</p></div></li>
+<li class="gh">집계</li><li class="gi" data-s="980" data-e="985">
+<time class="num">16:20<i>16:25</i></time>
+<div><p class="gp">최종 평가표 회수<em class="live">진행 중</em></p><p class="gr">16장(8팀×2명) / 빈칸·서명 / 정정 확인</p><p class="gw">운영요원 B · 백종아</p></div></li>
+<li class="gi" data-s="985" data-e="993">
+<time class="num">16:25<i>16:33</i></time>
+<div><p class="gp">5–8번 입력·전체 합산<em class="live">진행 중</em></p><p class="gr">점수 입력 / 수식 / 동점 여부</p><p class="gw">백종아 · 운영요원 B</p></div></li>
+<li class="gi" data-s="993" data-e="998">
+<time class="num">16:33<i>16:38</i></time>
+<div><p class="gp">전 팀 교차 검수<em class="live">진행 중</em></p><p class="gr">입력자와 다른 사람이 원본 대조 / 수정은 심사위원 확인</p><p class="gw">운영요원 B · 백종아</p></div></li>
+<li class="gi" data-s="998" data-e="1003">
+<time class="num">16:38<i>16:43</i></time>
+<div><p class="gp">수상 결과 확정·서명<em class="live">진행 중</em></p><p class="gr">심사위원 확인·서명 / 동점 규정 적용 / 등급·팀명</p><p class="gw">백종아 · 심사위원</p><p class="gn">미확정 결과 송출 금지</p></div></li>
+<li class="gh">시상 준비</li><li class="gi" data-s="1003" data-e="1008">
+<time class="num">16:43<i>16:48</i></time>
+<div><p class="gp">상장 출력·대조<em class="live">진행 중</em></p><p class="gr">확정 결과 기준 이름·등급·직인·케이스</p><p class="gw">백종아 · 운영요원 B</p></div></li>
+<li class="gi" data-s="1008" data-e="1010">
+<time class="num">16:48<i>16:50</i></time>
+<div><p class="gp">결과지 전달·수상 화면 선택<em class="live">진행 중</em></p><p class="gr">사회자 결과지 / 사전 제작 수상 화면 선택 / 시상자 대기</p><p class="gw">백종아 · AV(공용)·사회자</p></div></li>
+<li class="gh">시상</li><li class="gi" data-s="1010" data-e="1015">
+<time class="num">16:50<i>16:55</i></time>
+<div><p class="gp">심사 총평<em class="live">진행 중</em></p><p class="gr">총평자 호명 / 5분 이내</p><p class="gw">사회자 · 심사위원</p></div></li>
+<li class="gi" data-s="1015" data-e="1019">
+<time class="num">16:55<i>16:59</i></time>
+<div><p class="gp">장려상 ①<em class="live">진행 중</em></p><p class="gr">호명 / 등단 / 상장·보드 / 사진 / 퇴장</p><p class="gw">사회자 · 운영요원 A(등단)·B(상장)</p></div></li>
+<li class="gi" data-s="1019" data-e="1023">
+<time class="num">16:59<i>17:03</i></time>
+<div><p class="gp">장려상 ②<em class="live">진행 중</em></p><p class="gr">호명 / 등단 / 상장·보드 / 사진 / 퇴장</p><p class="gw">사회자 · 운영요원 A·B</p></div></li>
+<li class="gi" data-s="1023" data-e="1029">
+<time class="num">17:03<i>17:09</i></time>
+<div><p class="gp">우수상<em class="live">진행 중</em></p><p class="gr">호명 / 등단 / 상장·보드 / 사진 / 퇴장</p><p class="gw">사회자 · 운영요원 A·B</p></div></li>
+<li class="gi" data-s="1029" data-e="1035">
+<time class="num">17:09<i>17:15</i></time>
+<div><p class="gp">대상<em class="live">진행 중</em></p><p class="gr">호명 / 등단 / 상장·보드 / 사진 / 퇴장</p><p class="gw">사회자 · 운영요원 A·B</p></div></li>
+<li class="gh">폐회</li><li class="gi" data-s="1035" data-e="1038">
+<time class="num">17:15<i>17:18</i></time>
+<div><p class="gp">단체 촬영<em class="live">진행 중</em></p><p class="gr">수상팀·심사위원·시상자 정렬 → 본선 8팀 전체 컷</p><p class="gw">운영요원 A · 촬영(공용)</p></div></li>
+<li class="gi" data-s="1038" data-e="1040">
+<time class="num">17:18<i>17:20</i></time>
+<div><p class="gp">폐회·후속 안내<em class="live">진행 중</em></p><p class="gr">상금 서류 제출 방법 / 기념품 수령 안내 / 퇴장</p><p class="gw">사회자 · 백종아</p><p class="gn">심사위원 감사 선물은 총괄이 직접 전달</p></div></li>
+<li class="gh">종료 후</li><li class="gi" data-s="1040" data-e="1060">
+<time class="num">17:20<i>17:40</i></time>
+<div><p class="gp">기념품 배부·서류 회수<em class="live">진행 중</em></p><p class="gr">본선 진출자 20명 기념품(명단 체크) / 수상팀 서류 / 평가표·결과서 보관</p><p class="gw">운영요원 A · 백종아·운영요원 B</p><p class="gn">지연 시 예비시간</p></div></li>
+<li class="gh">철수</li><li class="gi" data-s="1060" data-e="1080">
+<time class="num">17:40<i>18:00</i></time>
+<div><p class="gp">장비·비품 회수<em class="live">진행 중</em></p><p class="gr">자료 백업 / 대여품 반납 / 분실물 / 원상복구</p><p class="gw">운영요원 A · 백종아·운영요원 B</p><p class="gn">18:00 철수</p></div></li>
+  </ol>
+</section>
+
+<section class="sec px" id="teams">
+  <div class="sh"><h2>발표 순서</h2><p>호명은 팀명과 팀원 전원</p></div>
+  <ol class="tms">
+<li class="tm t-odd"><span class="tn num">01</span>
+<div><p class="tt"><b>고으니</b><time class="num">13:10</time></p>
+<p class="tmem">고은희 <span>개인 1명</span></p>
+<p class="tcall"><span>호명</span>고으니, 고은희</p>
+<p class="tmeta">팀명 사용 개인 · 왼쪽 3열</p><span class="dot wait">자료 대기</span></div></li>
+<li class="tm t-even"><span class="tn num">02</span>
+<div><p class="tt"><b>커알못</b><time class="num">13:30</time></p>
+<p class="tmem">오현주 · 전영채 · 최예윤 · 한종아 <span>팀 4명</span></p>
+<p class="tcall"><span>호명</span>커알못, 오현주·전영채·최예윤·한종아</p>
+<p class="tmeta">팀장 오현주 · 오른쪽 3열</p><span class="dot wait">자료 대기</span></div></li>
+<li class="tm t-odd"><span class="tn num">03</span>
+<div><p class="tt"><b>마홍주</b><time class="num">13:50</time></p>
+<p class="tmem">마홍주 <span>개인 1명</span></p>
+<p class="tcall"><span>호명</span>마홍주 (호명 방식 확인)</p>
+<p class="tmeta">팀명 없음 · 쇼가이드 마*주 · 왼쪽 4열</p><span class="dot ok">자료 제출</span></div></li>
+<li class="tm t-even"><span class="tn num">04</span>
+<div><p class="tt"><b>unch</b><time class="num">14:10</time></p>
+<p class="tmem">황채원 · 홍은채 <span>팀 2명</span></p>
+<p class="tcall"><span>호명</span>unch, 황채원·홍은채</p>
+<p class="tmeta">팀장 황채원 · 발음 확인 · 오른쪽 4열</p><span class="dot wait">자료 대기</span></div></li>
+<li class="tm t-odd"><span class="tn num">05</span>
+<div><p class="tt"><b>원두잇</b><time class="num">15:00</time></p>
+<p class="tmem">전해원 <span>개인 1명</span></p>
+<p class="tcall"><span>호명</span>원두잇, 전해원</p>
+<p class="tmeta">팀명 사용 개인 · 왼쪽 5열</p><span class="dot wait">자료 대기</span></div></li>
+<li class="tm t-even"><span class="tn num">06</span>
+<div><p class="tt"><b>원두ONE</b><time class="num">15:20</time></p>
+<p class="tmem">함유선 · 성유정 · 백종헌 · 방주혁 <span>팀 4명</span></p>
+<p class="tcall"><span>호명</span>원두ONE, 함유선·성유정·백종헌·방주혁</p>
+<p class="tmeta">팀장 함유선 · 오른쪽 5열</p><span class="dot wait">자료 대기</span></div></li>
+<li class="tm t-odd"><span class="tn num">07</span>
+<div><p class="tt"><b>이다(ieda)</b><time class="num">15:40</time></p>
+<p class="tmem">박경민 · 김태희 · 이영진 <span>팀 3명</span></p>
+<p class="tcall"><span>호명</span>이다, 박경민·김태희·이영진</p>
+<p class="tmeta">팀장 박경민 · 왼쪽 6열</p><span class="dot ok">자료 제출</span></div></li>
+<li class="tm t-even"><span class="tn num">08</span>
+<div><p class="tt"><b>온에어(OnAir)</b><time class="num">16:00</time></p>
+<p class="tmem">윤지선 · 정민서 · 이재윤 · 이수민 <span>팀 4명</span></p>
+<p class="tcall"><span>호명</span>온에어, 윤지선·정민서·이재윤·이수민</p>
+<p class="tmeta">팀장 윤지선 · 오른쪽 6열</p><span class="dot ok">자료 제출</span></div></li>
+  </ol>
+</section>
+
+<section class="sec px floor" id="floor">
+  <div class="sh"><h2>좌석·동선</h2><p>임시 배치 · 300호 평면도 받으면 수정</p></div>
+  <svg viewBox="0 0 360 470" role="img" aria-labelledby="ft">
+    <title id="ft">300호 좌석 배치와 다음 팀 이동 동선</title>
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#4F7A26"/></marker>
+    <marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8A8A8A"/></marker></defs>
+    <rect x="0" y="0" width="360" height="470" fill="#FFFFFF"/>
+    <line x1="8" y1="78" x2="352" y2="78" stroke="#1A1A1A"/>
+    <text x="180" y="16" text-anchor="middle" font-size="9" fill="#8A8A8A" letter-spacing="1.5">STAGE</text>
+    <rect x="125" y="26" width="110" height="8" rx="1" fill="#1A1A1A"/><text x="180" y="48" text-anchor="middle" font-size="9" fill="#555">스크린</text>
+    <circle cx="60" cy="52" r="4" fill="#1A1A1A"/><text x="60" y="68" text-anchor="middle" font-size="9.5" fill="#1A1A1A">사회자</text>
+    <circle cx="300" cy="52" r="4" fill="#7FAE4E"/><text x="300" y="68" text-anchor="middle" font-size="9.5" fill="#1A1A1A">발표자</text>
+    <g font-size="8" fill="#8A8A8A" text-anchor="middle"><text x="180" y="117">1</text><text x="180" y="161">2</text><text x="180" y="205">3</text><text x="180" y="249">4</text><text x="180" y="293">5</text><text x="180" y="337">6</text></g>
+    <g fill="#FFFFFF" stroke="#BDBDBA"><rect x="28" y="98" width="60" height="28" rx="3" fill="#1A1A1A" stroke="none"/><rect x="94" y="98" width="60" height="28" rx="3" fill="#1A1A1A" stroke="none"/>
+      <rect x="206" y="98" width="60" height="28" rx="3" stroke-dasharray="3 3"/><rect x="272" y="98" width="60" height="28" rx="3" stroke="#7FAE4E"/></g>
+    <g font-size="9" text-anchor="middle"><text x="58" y="115.5" fill="#FFFFFF">심사</text><text x="124" y="115.5" fill="#FFFFFF">심사</text><text x="236" y="115.5" fill="#8A8A8A">비움</text><text x="302" y="115.5" fill="#4F7A26">발표 팀원</text></g>
+    <g fill="none" stroke="#ECECEA" stroke-dasharray="3 3"><rect x="28" y="142" width="126" height="28" rx="3"/><rect x="206" y="142" width="126" height="28" rx="3"/></g>
+    <g font-size="9.5" text-anchor="middle" fill="#1A1A1A">
+      <rect x="28" y="186" width="126" height="28" rx="3" fill="#F6F6F4" stroke="#D6D6D3"/><text x="91" y="203.5">1 고으니</text>
+      <rect x="206" y="186" width="126" height="28" rx="3" fill="#FFFFFF" stroke="#D6D6D3"/><text x="269" y="203.5">2 커알못</text>
+      <rect x="28" y="230" width="126" height="28" rx="3" fill="#F6F6F4" stroke="#1A1A1A"/><text x="91" y="247.5">3 마홍주</text>
+      <rect x="206" y="230" width="126" height="28" rx="3" fill="#FFFFFF" stroke="#D6D6D3"/><text x="269" y="247.5">4 unch</text>
+      <rect x="28" y="274" width="126" height="28" rx="3" fill="#F6F6F4" stroke="#D6D6D3"/><text x="91" y="291.5">5 원두잇</text>
+      <rect x="206" y="274" width="126" height="28" rx="3" fill="#FFFFFF" stroke="#D6D6D3"/><text x="269" y="291.5">6 원두ONE</text>
+      <rect x="28" y="318" width="126" height="28" rx="3" fill="#F6F6F4" stroke="#D6D6D3"/><text x="91" y="335.5">7 이다</text>
+      <rect x="206" y="318" width="126" height="28" rx="3" fill="#FFFFFF" stroke="#D6D6D3"/><text x="269" y="335.5">8 온에어</text>
+    </g>
+    <path d="M28 244 H15 V390 H288" fill="none" stroke="#4F7A26" stroke-width="1.6" marker-end="url(#ar)"/>
+    <circle cx="303" cy="390" r="11" fill="#FFFFFF" stroke="#4F7A26" stroke-width="1.6"/><text x="303" y="393" text-anchor="middle" font-size="8.5" fill="#4F7A26">대기</text>
+    <path d="M314 390 H346 V86 L308 58" fill="none" stroke="#8A8A8A" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#ar2)"/>
+    <text x="22" y="382" font-size="8.5" fill="#4F7A26">① 뒤로 나와 반시계 방향</text>
+    <text x="338" y="92" text-anchor="end" font-size="8.5" fill="#8A8A8A">② 앞 팀 Q&amp;A 끝나면 발표 자리로</text>
+    <line x1="150" y1="420" x2="210" y2="420" stroke="#1A1A1A"/><text x="180" y="436" text-anchor="middle" font-size="9" fill="#1A1A1A">A · 시간 사인 위치</text>
+    <text x="180" y="458" text-anchor="middle" font-size="8" fill="#8A8A8A">숫자는 열 · 그림은 3번 팀 예시 · 출입구는 평면도 확인 후 표시</text>
+  </svg>
+  <ol class="steps">
+    <li>앞 팀 발표 중, 운영요원 B가 다음 팀을 불러 자리 뒤로 나오게 합니다.</li>
+    <li>반시계 방향으로 돌아 뒷줄 오른쪽 대기 지점에 섭니다.</li>
+    <li>B가 마지막 주의사항을 알립니다. 발표 15분과 Q&amp;A 5분을 지키고, 남은 5분·2분에 뒤에서 사인합니다.</li>
+    <li>앞 팀 Q&amp;A가 끝나면 오른쪽 통로로 올라가 스크린 오른쪽 발표 자리로 갑니다.</li>
+    <li>팀원은 발표자 옆에 함께 서거나 1열 오른쪽 발표 팀원석에 앉습니다(선택).</li>
+    <li>발표가 끝나면 자기 자리로 돌아갑니다. 복귀 경로는 평면도를 보고 정합니다.</li>
+  </ol>
+  <p class="note" style="margin-top:12px">좌석은 지그재그로, 같은 열에서 왼쪽은 홀수 순번, 오른쪽은 짝수 순번입니다. 2열은 비워 심사석과 간격을 둡니다.</p>
+</section>
+
+<section class="sec px" id="signs">
+  <div class="sh"><h2>시간 사인</h2><p>운영요원 A · 객석 뒤 가운데</p></div>
+  <div class="signs"><div class="sign"><b class="num">5분</b><span>발표 시작 10분 후</span></div><div class="sign"><b class="num">2분</b><span>발표 시작 13분 후</span></div></div>
+  <div class="script"><small>대기 지점에서 B가 할 말</small>곧 발표 순서입니다. 발표 15분, 질의응답 5분입니다. 남은 시간 5분과 2분에 뒤에서 카드로 알려 드립니다. 앞 팀 질의응답이 끝나면 바로 오른쪽으로 올라가 발표 자리에 서 주세요. 팀원분들은 옆에 함께 서시거나 앞줄 오른쪽 자리에 앉으셔도 됩니다.</div>
+  <p class="note" style="margin-top:12px">15분이 지나면 사회자가 발표를 정리하고, Q&amp;A 종료도 사회자가 알립니다.</p>
+</section>
+
+<section class="sec px" id="roles">
+  <div class="sh"><h2>역할</h2></div>
+  <dl class="info"><div class="kv"><dt>백종아</dt><dd><b>총괄</b><p class="rd">진행 승인 · 예외 판단 · 사회자·심사위원 연락 · 점수 입력 · 상장 출력 · 다음 팀 파일 준비</p></dd></div><div class="kv"><dt>운영요원 A</dt><dd><b>시간·참가팀</b><p class="rd">등록·출석 · 발표 남은 5분·2분 사인(객석 뒤) · Q&amp;A 타이머 · 수상팀 등단 · 선물 배부</p></dd></div><div class="kv"><dt>운영요원 B</dt><dd><b>대기·심사 지원</b><p class="rd">다음 팀을 뒤로 불러 대기 지점 안내·주의사항 고지 · 평가표 배부·회수 · 점수 검수 · 상장 전달</p></dd></div><div class="kv"><dt>사회자</dt><dd><b>진행</b><p class="rd">개회·심사위원 소개·팀 호명(팀명 + 팀원 전원)·Q&amp;A 진행·휴식·시상·폐회</p></dd></div><div class="kv"><dt>공용 AV</dt><dd><b>송출</b><p class="rd">발표 파일·운영 화면 전환, 마이크 (상주 여부 확인 중)</p></dd></div><div class="kv"><dt>심사위원</dt><dd><b>조원진 · 박재현</b><p class="rd">12:30 도착 · 12:40 브리핑 · 팀별 점수·메모 · 16:38 결과 확정 서명</p></dd></div></dl>
+</section>
+
+<section class="sec px" id="check">
+  <div class="sh"><h2>준비물</h2><p id="ckc">이 기기에만 저장됩니다</p></div>
+<div class="ckg"><h4>심사석<small class="ckn" data-g="심사석"></small></h4><label class="opt"><input type="checkbox" id="c1"><span>심사위원 명패 2 (조원진 커피 칼럼니스트 / 박재현 서울모닝커피클럽 대표)</span></label><label class="opt"><input type="checkbox" id="c2"><span>펜 트레이 세트 2 (삼색볼펜·연필·형광펜)</span></label><label class="opt"><input type="checkbox" id="c3"><span>심사위원 자료집 2 (+ 운영 2)</span></label><label class="opt"><input type="checkbox" id="c4"><span>심사표 16장 (팀당 1장 × 2명) + 클립보드 2</span></label><label class="opt"><input type="checkbox" id="c5"><span>심사석 고정 마이크 1</span></label><label class="opt"><input type="checkbox" id="c6"><span>생수·커피·주스 + 간식 접시 각 1세트</span></label><label class="opt"><input type="checkbox" id="c7"><span>(선택) 심사 입력용 노트북 2 + 충전기</span></label></div>
+<div class="ckg"><h4>무대·AV<small class="ckn" data-g="무대·AV"></small></h4><label class="opt"><input type="checkbox" id="c8"><span>스크린·프로젝터 / HDMI·어댑터</span></label><label class="opt"><input type="checkbox" id="c9"><span>사회자 마이크 · 발표자 마이크 · 예비 1</span></label><label class="opt"><input type="checkbox" id="c10"><span>리모컨 2 + 건전지</span></label><label class="opt"><input type="checkbox" id="c11"><span>발표 노트북 + 예비 노트북</span></label><label class="opt"><input type="checkbox" id="c12"><span>8팀 파일 순번 폴더 (01_고으니 …) + USB 2</span></label><label class="opt"><input type="checkbox" id="c13"><span>운영 화면 PPT (대기·휴식·시상)</span></label><label class="opt"><input type="checkbox" id="c14"><span>사인 카드 2종(5분·2분) × 2</span></label></div>
+<div class="ckg"><h4>등록·좌석<small class="ckn" data-g="등록·좌석"></small></h4><label class="opt"><input type="checkbox" id="c15"><span>출석 명단 · 배지</span></label><label class="opt"><input type="checkbox" id="c16"><span>팀별 좌석표 8 (왼쪽 홀수·오른쪽 짝수)</span></label><label class="opt"><input type="checkbox" id="c17"><span>심사석·발표 팀원석·대기 지점 표시</span></label><label class="opt"><input type="checkbox" id="c18"><span>입구 안내·방향 표지</span></label><label class="opt"><input type="checkbox" id="c19"><span>촬영 안내문</span></label></div>
+<div class="ckg"><h4>다과<small class="ckn" data-g="다과"></small></h4><label class="opt"><input type="checkbox" id="c20"><span>생수 500ml 66</span></label><label class="opt"><input type="checkbox" id="c21"><span>커피 RTD 36 (블랙·라떼)</span></label><label class="opt"><input type="checkbox" id="c22"><span>주스 36 (2종)</span></label><label class="opt"><input type="checkbox" id="c23"><span>기타 음료 36 (탄산·차)</span></label><label class="opt"><input type="checkbox" id="c24"><span>개별 포장 간식 81</span></label><label class="opt"><input type="checkbox" id="c25"><span>컵·냅킨·물티슈·쓰레기봉투</span></label></div>
+<div class="ckg"><h4>선물<small class="ckn" data-g="선물"></small></h4><label class="opt"><input type="checkbox" id="c26"><span>웰컴키트에서 25세트 확보 (참가자 20 · 심사 2 · 예비 3)</span></label><label class="opt"><input type="checkbox" id="c27"><span>심사위원 2세트 별도 표시</span></label><label class="opt"><input type="checkbox" id="c28"><span>네임택·쇼핑백 25</span></label><label class="opt"><input type="checkbox" id="c29"><span>배부 명단 (전체 명단 시트 출력)</span></label></div>
+<div class="ckg"><h4>시상<small class="ckn" data-g="시상"></small></h4><label class="opt"><input type="checkbox" id="c30"><span>시상보드 4 (대상 100만 · 우수 50만 · 장려 30만 ×2)</span></label><label class="opt"><input type="checkbox" id="c31"><span>상장 용지·케이스 · 프린터 테스트</span></label><label class="opt"><input type="checkbox" id="c32"><span>사회자 결과지 2</span></label><label class="opt"><input type="checkbox" id="c33"><span>수상 서류 양식 6</span></label></div>
+</section>
+
+<section class="sec px em" id="emergency">
+  <div class="sh"><h2>돌발 상황</h2></div>
+  <dl class="info">
+    <div class="kv"><dt>파일 오류</dt><dd>예비 노트북이나 PDF로 전환합니다. 2분이 넘으면 다음 팀을 먼저 진행하고, 해당 팀은 뒤로 보냅니다.</dd></div>
+    <div class="kv"><dt>시간 초과</dt><dd>2분 사인 후 종료 시각을 넘기면 사회자가 마무리를 요청합니다. Q&amp;A 5분은 유지합니다.</dd></div>
+    <div class="kv"><dt>다음 팀 부재</dt><dd>B가 바로 총괄에 알리고, 총괄 판단으로 그다음 팀과 순서를 바꿉니다.</dd></div>
+    <div class="kv"><dt>5분 이상 지연</dt><dd>14:30 휴식을 줄여 맞춥니다. 발표와 Q&amp;A 시간은 줄이지 않습니다.</dd></div>
+    <div class="kv"><dt>집계 지연</dt><dd>사회자가 대기 멘트를 합니다. 결과지를 받기 전에는 수상 이야기를 하지 않습니다.</dd></div>
+    <div class="kv"><dt>심사 기기 오류</dt><dd>심사석에 둔 종이 심사표 16장으로 바로 바꿉니다.</dd></div>
+  </dl>
+</section>
+
+<footer class="px">CFC 2026 본선 운영매뉴얼 · 운영계획 v7 기준 · 같은 링크에서 바로 갱신됩니다</footer>
+</div>
+<script>
+(function(){
+  function kst(){var p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());var o={};p.forEach(function(x){o[x.type]=x.value});return o;}
+  var dd=document.getElementById('dday'),nl=document.getElementById('nowlink');
+  function tick(){
+    var o=kst(),diff=Math.round((Date.UTC(2026,10,13)-Date.UTC(+o.year,+o.month-1,+o.day))/86400000);
+    var items=[].slice.call(document.querySelectorAll('.gi'));
+    items.forEach(function(li){li.classList.remove('is-now','is-past')});
+    dd.classList.remove('on');
+    if(diff>0){dd.textContent='D-'+diff+' · 11.13 금요일';nl.hidden=true;return;}
+    if(diff<0){dd.textContent='행사 종료';nl.hidden=true;return;}
+    var m=(+o.hour%24)*60+(+o.minute),cur=null;
+    items.forEach(function(li){if(m>=+li.dataset.e)li.classList.add('is-past');if(m>=+li.dataset.s&&m<+li.dataset.e)cur=li;});
+    if(cur){cur.classList.add('is-now');cur.id='now';nl.href='#now';nl.hidden=false;dd.classList.add('on');dd.textContent='진행 중 · '+cur.querySelector('.gp').firstChild.textContent;}
+    else{dd.textContent='오늘 본선';nl.hidden=true;}
+  }
+  tick();setInterval(tick,30000);
+  var KEY='cfc-manual-ck',st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){st={}}
+  var boxes=[].slice.call(document.querySelectorAll('.opt input')),cc=document.getElementById('ckc');
+  function count(){var n=boxes.filter(function(b){return b.checked}).length;cc.textContent=n+' / '+boxes.length+' 완료 · 이 기기에만 저장됩니다';
+    [].forEach.call(document.querySelectorAll('.ckg'),function(g){var bs=g.querySelectorAll('input'),d=[].filter.call(bs,function(b){return b.checked}).length;g.querySelector('.ckn').textContent=d+'/'+bs.length;});}
+  boxes.forEach(function(b){b.checked=!!st[b.id];b.addEventListener('change',function(){st[b.id]=b.checked;try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}count();});});count();
+  var links=[].slice.call(document.querySelectorAll('.dock a')),secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=secs.indexOf(e.target);links.forEach(function(a,j){a.classList.toggle('cur',i===j)});var a=links[i],nv=a&&a.parentNode;if(nv)nv.scrollLeft=a.offsetLeft-nv.clientWidth/2+a.offsetWidth/2;}})},{rootMargin:'-40% 0px -55% 0px'});secs.forEach(function(s){if(s)io.observe(s)});}
+})();
+</script>
+</body>
+</html>

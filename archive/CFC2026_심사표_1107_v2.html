@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CFC 2026 본선 심사표</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap">
+</head>
+<body>
+<style>
+/* WCF 2026 쇼가이드 미니멀 테마를 따름: 먹색 + 회색 단계 + 포인트 그린 하나, 굵기 300–600, 카드 대신 1px 구분선 */
+:root{
+  --page:#F4F4F2; --bg:#FFFFFF; --k:#1A1A1A; --k2:#555555; --mut:#8A8A8A; --line:#ECECEA; --soft:#F6F6F4;
+  --g:#7FAE4E; --gd:#4F7A26; --warn:#B05A3C; --amber:#9A7B1E; --r:10px; --max:560px;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:64px;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);font-weight:400;background:var(--page);color:var(--k);line-height:1.6;letter-spacing:-.005em;word-break:keep-all;overflow-wrap:break-word;-webkit-font-smoothing:antialiased;font-size:14px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:rgba(255,255,255,.94)}
+b,strong{font-weight:600}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:1.5px solid var(--k);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:var(--max);margin:0 auto;background:var(--bg);min-height:100vh;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.px{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.ed{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gd)}
+.theme{font-size:38px;font-weight:300;line-height:1.05;letter-spacing:-.035em}
+.mh{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.info{border-top:1px solid var(--k)}
+.kv{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv dt{font-size:12px;font-weight:500;color:var(--mut);padding-top:2px}
+.dot{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500}
+.dot::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.dot.ok{color:var(--gd)} .dot.wait{color:var(--warn)} .dot.mid{color:var(--amber)} .dot.none{color:var(--mut)}
+.sec{padding-block:40px 32px;border-top:1px solid var(--line)}
+.sh{margin-bottom:20px;display:grid;gap:2px}
+.sh h2{font-size:21px;font-weight:600;letter-spacing:-.025em;line-height:1.25}
+.sh p{font-size:12.5px;color:var(--mut)}
+.dock{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;padding-top:8px}
+.dock::-webkit-scrollbar{display:none}
+.dock a{flex:none;font-size:13px;font-weight:500;color:var(--mut);text-decoration:none;padding:6px 0 9px;white-space:nowrap;border-bottom:1.5px solid transparent}
+.dock a.cur{color:var(--k);border-bottom-color:var(--k)}
+.btn{display:block;text-align:center;font-size:14px;font-weight:500;text-decoration:none;border:1px solid var(--k);border-radius:var(--r);padding:13px;background:var(--bg)}
+.btn.fill{background:var(--k);color:#fff}
+.note{font-size:12px;color:var(--mut)}
+footer{border-top:1px solid var(--line);color:var(--mut);padding-block:24px calc(28px + env(safe-area-inset-bottom,0px));font-size:12px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+:root{--max:980px}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:var(--max);margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding-block:14px 0;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.bar h1{font-size:15px;font-weight:600;margin-right:auto;letter-spacing:-.02em}
+.seg{display:flex;gap:18px}
+.seg button{border:0;background:none;font-size:13.5px;font-weight:500;color:var(--mut);padding:6px 0 10px;border-bottom:1.5px solid transparent}
+.seg button[aria-pressed="true"]{color:var(--k);border-bottom-color:var(--k)}
+.conn{width:100%;font-size:11.5px;color:var(--mut);padding-bottom:10px;display:inline-flex;align-items:center;gap:6px}
+.conn::before{content:"";width:6px;height:6px;border-radius:50%;background:#CFCFCC}
+.conn.on::before{background:var(--g)}
+main{max-width:var(--max);margin:0 auto;background:var(--bg);min-height:100vh;padding-block:28px 60px;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.notice{font-size:12.5px;color:var(--warn);background:#FBF3EF;border-radius:8px;padding:10px 14px;margin-bottom:18px}
+.judge{display:grid;gap:28px;grid-template-columns:1fr}
+@media (min-width:860px){.judge{grid-template-columns:240px minmax(0,1fr);align-items:start}}
+.tlist{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;border-top:1px solid var(--k)}
+@media (min-width:860px){.tlist{grid-template-columns:1fr;position:sticky;top:96px}}
+.tbtn{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:12px 0;position:relative}
+.tbtn .n{font-size:12px;font-weight:500;color:var(--mut);font-variant-numeric:tabular-nums}
+.tbtn .nm{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbtn .sc{font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
+.tbtn[aria-current="true"] .nm{font-weight:600}
+.tbtn[aria-current="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1.5px;background:var(--k)}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;white-space:nowrap}
+.st::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.st.none{color:var(--mut)} .st.draft{color:var(--amber)} .st.done{color:var(--gd)}
+.sheet{display:grid;gap:22px;min-width:0}
+.sh-top{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;padding-bottom:14px;border-bottom:1px solid var(--k)}
+.sh-top h2{font-size:24px;font-weight:300;letter-spacing:-.03em}
+.sh-top .meta{font-size:12.5px;color:var(--mut)}
+.cr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.cr label{font-size:14px;font-weight:500}
+.cr label small{display:block;font-size:12px;font-weight:400;color:var(--mut)}
+.num{display:flex;align-items:center;gap:4px}
+.num button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:16px;color:var(--k2)}
+.num input{width:56px;height:36px;text-align:center;font:inherit;font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;border:0;border-bottom:1px solid #D6D6D3;border-radius:0;background:transparent;color:var(--k)}
+.num input:focus{outline:0;border-bottom-color:var(--k)}
+.num input.err{color:var(--warn);border-bottom-color:var(--warn)}
+.num .max{font-size:12px;color:var(--mut);width:28px;font-variant-numeric:tabular-nums}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0 14px;border-bottom:1px solid var(--k)}
+.total span{font-size:12px;font-weight:500;color:var(--mut)}
+.total b{font-size:40px;font-weight:300;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.sheet label[for="memo"]{font-size:12px!important;font-weight:500!important;color:var(--mut)}
+textarea{width:100%;min-height:120px;margin-top:6px;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;font:inherit;font-size:14px;line-height:1.7;background:var(--bg);color:var(--k);resize:vertical}
+textarea:focus{outline:0;border-color:var(--k)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-block;padding:12px 18px;font-size:14px;font-weight:500;background:var(--k);color:#fff;border:1px solid var(--k)}
+.btn.ghost{background:var(--bg);color:var(--k);border-color:#D6D6D3}
+.btn:disabled{background:#CFCFCC;border-color:#CFCFCC}
+.saved{font-size:12px;color:var(--mut);margin-left:auto}
+.locked .num button,.locked .num input,.locked textarea{pointer-events:none;color:var(--k2)}
+.sum-head{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;padding-bottom:14px;border-bottom:1px solid var(--k)}
+.sum-head h2{font-size:24px;font-weight:300;letter-spacing:-.03em}
+.sum-head span{font-size:12.5px;color:var(--mut)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:11px;font-weight:500;color:var(--mut);letter-spacing:.04em}
+td.r{text-align:right;font-variant-numeric:tabular-nums}
+td.rank{font-size:18px;font-weight:300;font-variant-numeric:tabular-nums}
+tr.odd td{background:var(--soft)}
+.memos{display:grid;gap:0 28px;margin-top:28px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.memo{padding:16px 0;border-bottom:1px solid var(--line);display:grid;gap:4px;font-size:13px}
+.memo h3{font-size:14px;font-weight:600}
+.memo small{font-size:11.5px;font-weight:500;color:var(--mut);margin-top:6px}
+.memo p{white-space:pre-wrap;color:var(--k2)}
+.foot{font-size:12px;color:var(--mut);margin-top:18px;line-height:1.7}
+
+</style>
+
+<header class="bar"><div class="bar-in">
+  <h1>CFC 2026 본선 심사표</h1>
+  <div class="seg" role="group" aria-label="보기 선택">
+    <button type="button" data-v="jo" aria-pressed="false">조원진</button>
+    <button type="button" data-v="park" aria-pressed="false">박재현</button>
+    <button type="button" data-v="sum" aria-pressed="false">집계</button>
+  </div>
+  <span class="conn" id="conn">저장소 연결 중…</span>
+</div></header>
+
+<main>
+  <div class="notice" id="notice" hidden></div>
+  <div id="judgeView" class="judge" hidden>
+    <nav class="tlist" id="tlist" aria-label="발표 팀"></nav>
+    <form class="sheet" id="sheet" autocomplete="off">
+      <div class="sh-top"><h2 id="tName"></h2><span class="meta" id="tMeta"></span><span id="tStatus"></span></div>
+      <div class="crit" id="crit"></div>
+      <div class="total"><span>합계 / 100</span><b id="tot">0</b></div>
+      <div><label for="memo" style="font-weight:700;font-size:.95rem">메모</label>
+        <textarea id="memo" placeholder="질문할 내용, 인상적인 점, 보완점을 자유롭게 적어 주세요"></textarea></div>
+      <div class="actions">
+        <button type="button" class="btn" id="submitBtn">이 팀 점수 확정</button>
+        <button type="button" class="btn ghost" id="editBtn" hidden>확정 취소하고 수정</button>
+        <button type="button" class="btn ghost" id="nextBtn">다음 팀 →</button>
+        <span class="saved" id="saved"></span>
+      </div>
+    </form>
+  </div>
+  <div id="sumView" hidden>
+    <div class="sum-head"><h2>실시간 집계</h2><span id="sumInfo"></span></div>
+    <div class="tbl"><table><thead><tr><th>순위</th><th>순서 · 팀</th><th>조원진</th><th>박재현</th><th>합계</th><th>평균</th><th>20점 항목 합</th><th>상태</th></tr></thead><tbody id="sumBody"></tbody></table></div>
+    <p class="foot">동점이면 20점 항목 2개(5·6번) 합이 높은 팀이 앞섭니다. 그래도 같으면 심사위원 협의로 정합니다. 확정되지 않은 점수도 표에 보이지만 순위는 참고용입니다.</p>
+    <div class="memos" id="memos"></div>
+  </div>
+  <p class="foot">점수와 메모는 입력하는 즉시 저장되어 집계 화면에 실시간으로 반영됩니다. 이 페이지는 운영 계정과 편집 권한을 받은 사람만 점수를 읽고 쓸 수 있습니다. 문제가 생기면 심사석의 종이 심사표를 사용해 주세요.</p>
+</main>
+
+<script>
+// ===== 심사 기준: 공고 확정 문구로 이름만 바꾸면 됩니다 =====
+var CRITERIA = [
+  {k:"s1", name:"심사 항목 1", desc:"공고 기준 문구 입력 예정", max:15},
+  {k:"s2", name:"심사 항목 2", desc:"공고 기준 문구 입력 예정", max:15},
+  {k:"s3", name:"심사 항목 3", desc:"공고 기준 문구 입력 예정", max:15},
+  {k:"s4", name:"심사 항목 4", desc:"공고 기준 문구 입력 예정", max:15},
+  {k:"s5", name:"심사 항목 5", desc:"공고 기준 문구 입력 예정", max:20},
+  {k:"s6", name:"심사 항목 6", desc:"공고 기준 문구 입력 예정", max:20}
+];
+var TEAMS = [
+  {n:1, name:"고으니", mem:"고은희", t:"13:10"},
+  {n:2, name:"커알못", mem:"오현주·전영채·최예윤·한종아", t:"13:30"},
+  {n:3, name:"마홍주", mem:"개인 참가", t:"13:50"},
+  {n:4, name:"unch", mem:"황채원·홍은채", t:"14:10"},
+  {n:5, name:"원두잇", mem:"전해원", t:"15:00"},
+  {n:6, name:"원두ONE", mem:"함유선·성유정·백종헌·방주혁", t:"15:20"},
+  {n:7, name:"이다(ieda)", mem:"박경민·김태희·이영진", t:"15:40"},
+  {n:8, name:"온에어(OnAir)", mem:"윤지선·정민서·이재윤·이수민", t:"16:00"}
+];
+var JUDGES = {jo:"조원진", park:"박재현"};
+
+(function(){
+  var $ = function(id){return document.getElementById(id)};
+  var state = {};          // docId -> data (from store)
+  var drafts = {};         // docId -> local edits not yet confirmed
+  var db = null, view = null, team = 1, canWrite = true;
+  var writeChain = {}, timers = {};
+
+  function docId(j, n){ return j + "_t" + n; }
+  function cur(j, n){ var id = docId(j, n); return drafts[id] || state[id] || null; }
+  function total(d){ if(!d) return 0; return CRITERIA.reduce(function(a,c){ var v = +d[c.k]; return a + (isFinite(v) ? v : 0); }, 0); }
+  function filled(d){ return d ? CRITERIA.filter(function(c){ return d[c.k] !== "" && d[c.k] != null; }).length : 0; }
+  function status(d){ if(!d || (!filled(d) && !d.memo)) return "none"; return d.submitted ? "done" : "draft"; }
+  var ST = {none:"미입력", draft:"작성 중", done:"확정"};
+  function chip(s){ var e = document.createElement("span"); e.className = "st " + s; e.textContent = ST[s]; return e; }
+  function hhmm(ts){ if(!ts) return ""; var d = new Date(ts); return d.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"Asia/Seoul"}); }
+
+  // ---- view switching
+  var segBtns = [].slice.call(document.querySelectorAll(".seg button"));
+  function setView(v){
+    view = v;
+    segBtns.forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.v === v)); });
+    try{ localStorage.setItem("cfc-judge-view", v); }catch(e){}
+    $("judgeView").hidden = (v === "sum"); $("sumView").hidden = (v !== "sum");
+    render();
+  }
+  segBtns.forEach(function(b){ b.addEventListener("click", function(){ setView(b.dataset.v); }); });
+
+  // ---- judge form
+  function buildCrit(){
+    var box = $("crit"); box.textContent = "";
+    CRITERIA.forEach(function(c){
+      var row = document.createElement("div"); row.className = "cr";
+      var lab = document.createElement("label"); lab.htmlFor = "in_" + c.k; lab.textContent = c.name + " ";
+      var sm = document.createElement("small"); sm.textContent = c.desc; lab.appendChild(sm);
+      var num = document.createElement("div"); num.className = "num";
+      var minus = document.createElement("button"); minus.type = "button"; minus.textContent = "−"; minus.setAttribute("aria-label", c.name + " 1점 빼기");
+      var inp = document.createElement("input"); inp.id = "in_" + c.k; inp.type = "number"; inp.inputMode = "numeric"; inp.min = 0; inp.max = c.max; inp.step = 1;
+      var plus = document.createElement("button"); plus.type = "button"; plus.textContent = "+"; plus.setAttribute("aria-label", c.name + " 1점 더하기");
+      var mx = document.createElement("span"); mx.className = "max"; mx.textContent = "/" + c.max;
+      minus.onclick = function(){ step(c, -1); }; plus.onclick = function(){ step(c, 1); };
+      inp.addEventListener("input", function(){ edit(c.k, inp.value === "" ? "" : Math.round(+inp.value)); });
+      num.append(minus, inp, plus, mx); row.append(lab, num); box.appendChild(row);
+    });
+  }
+  function step(c, d){
+    var x = cur(view, team) || {}; var v = x[c.k] === "" || x[c.k] == null ? 0 : +x[c.k];
+    v = Math.max(0, Math.min(c.max, v + d)); edit(c.k, v); $("in_" + c.k).value = v;
+  }
+  function base(){ return {judge: view, team: team, s1:"", s2:"", s3:"", s4:"", s5:"", s6:"", memo:"", submitted:false}; }
+  function edit(k, v){
+    if(view === "sum") return;
+    var id = docId(view, team);
+    var d = Object.assign(base(), state[id] || {}, drafts[id] || {});
+    if(d.submitted && k !== "submitted") return;
+    d[k] = v; d.updatedAt = Date.now(); drafts[id] = d;
+    paintForm(true); paintList();
+    clearTimeout(timers[id]); timers[id] = setTimeout(function(){ save(id); }, 700);
+  }
+  $("memo").addEventListener("input", function(){ edit("memo", $("memo").value); });
+
+  function valid(d){ return CRITERIA.every(function(c){ var v = d[c.k]; return v === "" || v == null || (v >= 0 && v <= c.max); }); }
+  function save(id){
+    var d = drafts[id]; if(!d) return;
+    if(!valid(d)){ $("saved").textContent = "배점을 넘는 점수가 있어 저장하지 않았습니다"; return; }
+    if(!db){ $("saved").textContent = "저장소에 연결되지 않아 이 화면에만 남아 있습니다"; return; }
+    var body = JSON.parse(JSON.stringify(d));
+    writeChain[id] = (writeChain[id] || Promise.resolve()).then(function(){
+      return db.collection("scores").doc(id).set(body);
+    }).then(function(){
+      if(drafts[id] && drafts[id].updatedAt === body.updatedAt) delete drafts[id];
+      if(id === docId(view, team)) $("saved").textContent = "저장됨 " + hhmm(body.updatedAt);
+    }).catch(function(e){
+      if(e && e.code === "invalid_argument"){ canWrite = false; $("saved").textContent = "이 계정은 점수를 저장할 권한이 없습니다"; }
+      else $("saved").textContent = "저장 실패: 잠시 후 다시 입력해 주세요";
+    });
+  }
+  $("submitBtn").onclick = function(){
+    var d = cur(view, team) || base();
+    if(filled(d) < CRITERIA.length){ $("saved").textContent = "모든 항목에 점수를 넣어야 확정할 수 있습니다"; return; }
+    edit("submitted", true); clearTimeout(timers[docId(view, team)]); save(docId(view, team));
+  };
+  $("editBtn").onclick = function(){ edit("submitted", false); };
+  $("nextBtn").onclick = function(){ team = team % 8 + 1; render(); window.scrollTo({top:0}); };
+
+  function paintForm(keepInputs){
+    if(view === "sum") return;
+    var t = TEAMS[team - 1], d = cur(view, team) || base(), s = status(d);
+    $("tName").textContent = t.n + ". " + t.name;
+    $("tMeta").textContent = t.mem + " · " + t.t + " 발표";
+    var stc = $("tStatus"); stc.textContent = ""; stc.appendChild(chip(s));
+    CRITERIA.forEach(function(c){
+      var inp = $("in_" + c.k), v = d[c.k];
+      if(!keepInputs || document.activeElement !== inp) inp.value = (v === "" || v == null) ? "" : v;
+      inp.classList.toggle("err", v !== "" && v != null && (v < 0 || v > c.max));
+    });
+    if(!keepInputs || document.activeElement !== $("memo")) $("memo").value = d.memo || "";
+    $("tot").textContent = total(d);
+    $("sheet").classList.toggle("locked", !!d.submitted);
+    $("submitBtn").hidden = !!d.submitted; $("editBtn").hidden = !d.submitted;
+    if(!keepInputs){ var st = state[docId(view, team)]; $("saved").textContent = st && st.updatedAt ? "마지막 저장 " + hhmm(st.updatedAt) : ""; }
+  }
+  function paintList(){
+    var box = $("tlist"); box.textContent = "";
+    TEAMS.forEach(function(t){
+      var d = cur(view, t.n), b = document.createElement("button");
+      b.type = "button"; b.className = "tbtn " + (t.n % 2 ? "odd" : "even");
+      b.setAttribute("aria-current", String(t.n === team));
+      var n = document.createElement("span"); n.className = "n"; n.textContent = t.n;
+      var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = t.name;
+      var right = document.createElement("span"); right.style.display = "grid"; right.style.justifyItems = "end";
+      var sc = document.createElement("span"); sc.className = "sc"; sc.textContent = filled(d) ? total(d) : "–";
+      right.append(sc, chip(status(d)));
+      b.append(n, nm, right);
+      b.onclick = function(){ team = t.n; render(); };
+      box.appendChild(b);
+    });
+  }
+  // ---- summary
+  function paintSum(){
+    var rows = TEAMS.map(function(t){
+      var a = cur("jo", t.n), b = cur("park", t.n);
+      var ta = total(a), tb = total(b);
+      var hi = ["s5","s6"].reduce(function(x,k){ return x + (+((a||{})[k])||0) + (+((b||{})[k])||0); }, 0);
+      return {t:t, a:a, b:b, ta:ta, tb:tb, sum:ta + tb, hi:hi, done:(a&&a.submitted?1:0) + (b&&b.submitted?1:0)};
+    });
+    var ranked = rows.slice().sort(function(x,y){ return y.sum - x.sum || y.hi - x.hi; });
+    var rank = {}; ranked.forEach(function(r,i){
+      var prev = ranked[i-1];
+      rank[r.t.n] = (prev && prev.sum === r.sum && prev.hi === r.hi) ? rank[prev.t.n] + "=" : String(i + 1);
+    });
+    var body = $("sumBody"); body.textContent = "";
+    ranked.forEach(function(r){
+      var tr = document.createElement("tr"); tr.className = r.t.n % 2 ? "odd" : "even";
+      function td(txt, cls){ var e = document.createElement("td"); if(cls) e.className = cls; e.textContent = txt; tr.appendChild(e); return e; }
+      td(rank[r.t.n].replace(/=$/, " (동점)"), "rank");
+      td(r.t.n + ". " + r.t.name);
+      td(filled(r.a) ? r.ta : "–", "r"); td(filled(r.b) ? r.tb : "–", "r");
+      td(r.sum, "r"); td((r.sum / 2).toFixed(1), "r"); td(r.hi, "r");
+      var st = td(""); st.appendChild(chip(r.done === 2 ? "done" : (filled(r.a) || filled(r.b) ? "draft" : "none")));
+      var sm = document.createElement("small"); sm.textContent = " " + r.done + "/2 확정"; sm.style.color = "var(--muted)"; st.appendChild(sm);
+      body.appendChild(tr);
+    });
+    var doneAll = rows.reduce(function(x,r){ return x + r.done; }, 0);
+    $("sumInfo").textContent = "확정 " + doneAll + " / 16";
+    var mbox = $("memos"); mbox.textContent = "";
+    TEAMS.forEach(function(t){
+      var card = document.createElement("div"); card.className = "memo";
+      var h = document.createElement("h3"); h.textContent = t.n + ". " + t.name; card.appendChild(h);
+      ["jo","park"].forEach(function(j){
+        var d = cur(j, t.n), s = document.createElement("small"), p = document.createElement("p");
+        s.textContent = JUDGES[j] + (d && filled(d) ? " · " + total(d) + "점" : ""); p.textContent = (d && d.memo) || "메모 없음";
+        card.append(s, p);
+      });
+      mbox.appendChild(card);
+    });
+  }
+  function render(){
+    if(!view) return;
+    if(view === "sum") paintSum(); else { paintList(); paintForm(false); }
+  }
+
+  // ---- boot
+  buildCrit();
+  var saved = null; try{ saved = localStorage.getItem("cfc-judge-view"); }catch(e){}
+  setView(saved && /^(jo|park|sum)$/.test(saved) ? saved : "jo");
+
+  var loadTimer = setTimeout(function(){ $("conn").textContent = "저장소에 아직 연결되지 않았습니다. 인터넷 연결을 확인해 주세요."; }, 10000);
+  if(!window.claude || !window.claude.use){ clearTimeout(loadTimer); offline(); return; }
+  window.claude.use("db").then(function(x){
+    db = x;
+    if(!db){ clearTimeout(loadTimer); offline(); return; }
+    db.collection("scores").onSnapshot(function(snap){
+      var next = {};
+      snap.docs.forEach(function(d){ if(d.exists) next[d.id] = d.data(); });
+      state = next;
+      if(!snap.metadata.fromCache){ clearTimeout(loadTimer); $("conn").textContent = "실시간 연결됨 · 다른 기기 입력이 바로 보입니다"; $("conn").classList.add("on"); }
+      if(view === "sum") paintSum(); else { paintList(); paintForm(true); }
+    }, function(e){
+      clearTimeout(loadTimer);
+      $("conn").textContent = "실시간 연결이 끊겼습니다. 페이지를 다시 열어 주세요.";
+    });
+  });
+  function offline(){
+    $("conn").textContent = "저장소를 쓸 수 없는 화면입니다";
+    var n = $("notice"); n.hidden = false;
+    n.innerHTML = "<b>점수가 저장되지 않습니다.</b> 운영 계정으로 로그인한 claude.ai에서 이 페이지를 열어 주세요. 그동안은 종이 심사표를 사용해 주세요.";
+  }
+})();
+</script>
+</body>
+</html>
